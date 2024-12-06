@@ -1,23 +1,29 @@
 <% layout('layouts/app') %>
 
 <div class="row">
-  <div class="col-6 offset-3">
+  <div class="col-10 offset-1">
     <div class="card">
-      <img src="<%= place.image %>" alt="<%= place.title %>" class="card-img-top">
+      <img class="rounded" src="<%= place.image %>" alt="<%= place.title %>" class="card-img-top">
       <div class="card-body">
-        <h5 class="card-title"><%= place.title %></h5>
+        <h3 class="card-title"><%= place.title %></h3>
         <p class="card-text"><%= place.description %></p>
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><%= place.location %></li>
-        <li class="list-group-item"><%= place.price %></li>
+        <li class="list-group-item">Location: <%= place.location %></li>
+        <li class="list-group-item">Price: Rp <%= place.price %></li>
       </ul>
       <div class="card-body">
-        <a href="/places/<%= place._id %>/edit" class="btn card-link btn-warning text-white">Edit</a>
+        <!-- <a href="/places/<%= place._id %>/edit" class="btn card-link btn-warning text-white">Edit</a>
         <form action="/places/<%= place._id %>?_method=DELETE" method="POST" style="display: inline!important;">
           <div class="btn btn-danger">Delete</div>
-        </form>
+        </form> -->
+        <a href="/places/<%= place.title %>/edit" class="btn card-link btn-warning text-white">Edit</a>
+        <form action="/places/<%= place.title %>?_method=DELETE" method="POST" style="display: inline!important;">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>        
       </div>
     </div>
   </div>
 </div>
+
+<a href="/places" class="btn btn-primary mt-4 offset-1">All places</a>

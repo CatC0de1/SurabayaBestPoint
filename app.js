@@ -22,6 +22,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
+// app.use((req, res, next) => {
+//   console.log(`Incoming Request: ${req.method} ${req.url}`);
+//   next();
+// });
+
 app.get('/', (req, res) => {
   res.render('home');
 })
@@ -41,25 +46,46 @@ app.post('/places', async (req, res) => {
   res.redirect('/places');
 })
 
-app.get('/places/:id', async (req, res) => {
-  const place = await Place.findById(req.params.id);
+// app.get('/places/:id', async (req, res) => {
+//   const place = await Place.findById(req.params.id);
+//   res.render('places/show', { place });
+// })
+
+app.get('/places/:title', async (req, res) => {
+  const place = await Place.findOne({ title: req.params.title });
   res.render('places/show', { place });
 })
 
-app.get('/places/:id/edit', async (req, res) => {
-  const place = await Place.findById(req.params.id);
+// app.get('/places/:id/edit', async (req, res) => {
+//   const place = await Place.findById(req.params.id);
+//   res.render('places/edit', { place });
+// })
+
+app.get('/places/:title/edit', async (req, res) => {
+  const place = await Place.findOne({ title: req.params.title });
   res.render('places/edit', { place });
 })
 
-app.put('/places/:id', async (req, res) => {
-  const place = await Place.findByIdAndUpdate(req.params.id, {...req.body.place});
-  res.redirect('/places');
+// app.put('/places/:id', async (req, res) => {
+//   const place = await Place.findByIdAndUpdate(req.params.id, {...req.body.place});
+//   res.redirect('/places');
+// })
+
+app.put('/places/:title', async (req, res) => {
+  const place = await Place.findOneAndUpdate({ title: req.params.title }, {...req.body.place});
+  res.redirect(`/places/${place.title}`);
 })
 
-app.delete('/places/:id', async (req, res) => {
-  await Place.findByIdAndDelete(req.params.id);
+// app.delete('/places/:id', async (req, res) => {
+//   await Place.findByIdAndDelete(req.params.id);
+//   res.redirect('/places');
+// })
+
+app.delete('/places/:title', async (req, res) => {
+  const place = await Place.findOneAndDelete({ title: req.params.title });
   res.redirect('/places');
-})
+});
+
 
 // app.get('/seed/place', async (req, res) => {
 //   const place = new Place({

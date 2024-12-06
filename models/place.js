@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const placeSchema = new Schema({
-  title: String,
+  title: { type: String, unique: true },
   price: String,
   description: String,
   location: String,
