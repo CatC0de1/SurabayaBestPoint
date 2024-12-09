@@ -84,7 +84,7 @@ app.put('/places/:title', async (req, res) => {
 app.delete('/places/:title', async (req, res) => {
   const place = await Place.findOneAndDelete({ title: req.params.title });
   res.redirect('/places');
-});
+})
 
 
 // app.get('/seed/place', async (req, res) => {
