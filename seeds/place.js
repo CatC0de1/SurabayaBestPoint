@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Place = require('../models/place');
 // const hereMaps = require('../utils/hereMaps');
 
-mongoose.connect('mongodb://127.0.0.1/SurabayaBestPoint')
+mongoose.connect('mongodb+srv://catcode0101:1234admin@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
     .then((result) => {
-        console.log('connected to mongodb')
+        console.log('connected to mongodb atlas')
     }).catch((err) => {
         console.log(err)
     });

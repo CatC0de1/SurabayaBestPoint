@@ -14,7 +14,7 @@ const Place = require('./models/place');
 //     console.log(err)
 // });
 
-mongoose.connect('mongodb+srv://catcode0101:1234admin@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
   .then((result) => {
     console.log('connected to mongodb atlas')
   }).catch((err) => {
