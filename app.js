@@ -21,6 +21,12 @@ mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.n
     console.log(err)
 });
 
+// SCP
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'self' 'https://vercel.live'; style-src 'self'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com;");
+  next();
+});
+
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
