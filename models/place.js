@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const placeSchema = new Schema({
   title: { type: String, unique: true },
-  price: String,
+  price: Number,
   description: String,
   location: String,
   image: String

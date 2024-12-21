@@ -2,32 +2,64 @@
 
 <h1 class="text-center">Add Place</h1>
 <div class="col-10 offset-1">
-  <form action="/places" method="POST">
+  <form action="/places" method="POST" class="validated-form" novalidate>
+
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" name="place[title]" id="title">
+      <input type="text" class="form-control" name="place[title]" id="title" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+      <div class="invalid-feedback">
+        Please fill out name of BestPoint!
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="location" class="form-label">Location</label>
-      <input type="text" class="form-control" name="place[location]" id="location">
+      <input type="text" class="form-control" name="place[location]" id="location" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+      <div class="invalid-feedback">
+        Please fill out location of BestPoint!
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="description" class="form-label">Description</label>
-      <textarea class="form-control" name="place[description]" id="description"></textarea>
+      <textarea class="form-control" name="place[description]" id="description" required></textarea>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+      <div class="invalid-feedback">
+        Please fill out description of BestPoint!
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="price" class="form-label">Price</label>
-      <input type="text" class="form-control" name="place[price]" id="price">
+      <input type="text" class="form-control" name="place[price]" id="price" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+      <div class="invalid-feedback">
+        Please fill out price of BestPoint!
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="image" class="form-label">Image</label>
-      <input type="text" class="form-control" name="place[image]" id="image">
+      <input type="text" class="form-control" name="place[image]" id="image" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+      <div class="invalid-feedback">
+        Please fill out image of BestPoint with url link!
+      </div>
     </div>
 
     <button type="submit" class="btn btn-success">Save</button>
+  
   </form>
 </div>
