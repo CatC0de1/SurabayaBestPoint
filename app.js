@@ -1,12 +1,15 @@
 const ejsMate = require('ejs-mate');
 const express = require('express');
-const ErrorHandler = require('./utils/ErrorHandler');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
-const wrapAsync = require('./utils/wrapAsync');
 const path = require('path');
+
 const app = express();
 const PORT = 3001;
+
+// utils
+const ErrorHandler = require('./utils/ErrorHandler');
+const wrapAsync = require('./utils/wrapAsync');
 
 // models
 const Place = require('./models/place');
@@ -30,6 +33,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 // middleware
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
+
+const adminCredentials = {
+  username: 'admin',
+  password: 'admin123'
+};
+
+const requireAdmin = (req, res, next) => {
+  const { username, password } = req.body;
+  if (username === adminCredentials.username && password === adminCredentials.password) {
+    next();
+  } else {
+    next(new ErrorHandler("Invalid data format", 400));
+  }
+};
 
 const validatePlace = (req, res, next) => {
   const { error } = placeSchema.validate(req.body);
@@ -59,15 +76,22 @@ app.get('/places/create', wrapAsync((req, res) => {
   res.render('places/create');
 }))
 
-app.post('/places', validatePlace, wrapAsync(async (req, res, next) => {
+app.post('/places', requireAdmin, (req, res, next) => {
+  req.body = { place: req.body.place };
+  next();
+}, validatePlace, wrapAsync(async (req, res, next) => {
   const place = new Place(req.body.place);
   await place.save();
   res.redirect('/places');
 }))
 
-app.get('/places/:title', wrapAsync(async (req, res) => {
+app.get('/places/:title', wrapAsync(async (req, res, next) => {
   const place = await Place.findOne({ title: req.params.title });
-  res.render('places/show', { place });
+  if (place) {
+    res.render('places/show', { place });
+  } else {
+    next(new ErrorHandler('Page not found', 404));
+  }
 }))
 
 app.get('/places/:title/edit', wrapAsync(async (req, res) => {
@@ -75,12 +99,16 @@ app.get('/places/:title/edit', wrapAsync(async (req, res) => {
   res.render('places/edit', { place });
 }))
 
-app.put('/places/:title', validatePlace, wrapAsync(async (req, res) => {
-  const place = await Place.findOneAndUpdate({ title: req.params.title }, {...req.body.place});
+app.put('/places/:title', requireAdmin, (req, res, next) => {
+  req.body = { place: req.body.place };
+  next();
+}, validatePlace, wrapAsync(async (req, res) => {
+  const place = await Place.findOneAndUpdate({ title: req.params.title }, { ...req.body.place });
   res.redirect(`/places/${place.title}`);
-}))
+}));
 
-app.delete('/places/:title', wrapAsync(async (req, res) => {
+
+app.delete('/places/:title', requireAdmin, wrapAsync(async (req, res) => {
   const place = await Place.findOneAndDelete({ title: req.params.title });
   res.redirect('/places');
 }))
@@ -106,7 +134,7 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
-  res.status(statusCode).render('error', { err });
+  res.status(statusCode).render('error', { err, statusCode });
 });
 
 app.listen(PORT, () => {
