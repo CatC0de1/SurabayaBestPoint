@@ -33,21 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // middleware
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
-
-const adminCredentials = {
-  username: 'admin',
-  password: 'admin123'
-};
-
-const requireAdmin = (req, res, next) => {
-  const { username, password } = req.body;
-  if (username === adminCredentials.username && password === adminCredentials.password) {
-    next();
-  } else {
-    next(new ErrorHandler("Invalid data format", 400));
-  }
-};
-
 const validatePlace = (req, res, next) => {
   const { error } = placeSchema.validate(req.body);
   if (error) {
@@ -76,7 +61,7 @@ app.get('/places/create', wrapAsync((req, res) => {
   res.render('places/create');
 }))
 
-app.post('/places', requireAdmin, (req, res, next) => {
+app.post('/places', (req, res, next) => {
   req.body = { place: req.body.place };
   next();
 }, validatePlace, wrapAsync(async (req, res, next) => {
@@ -99,7 +84,7 @@ app.get('/places/:title/edit', wrapAsync(async (req, res) => {
   res.render('places/edit', { place });
 }))
 
-app.put('/places/:title', requireAdmin, (req, res, next) => {
+app.put('/places/:title', (req, res, next) => {
   req.body = { place: req.body.place };
   next();
 }, validatePlace, wrapAsync(async (req, res) => {
@@ -108,7 +93,7 @@ app.put('/places/:title', requireAdmin, (req, res, next) => {
 }));
 
 
-app.delete('/places/:title', requireAdmin, wrapAsync(async (req, res) => {
+app.delete('/places/:title', wrapAsync(async (req, res) => {
   const place = await Place.findOneAndDelete({ title: req.params.title });
   res.redirect('/places');
 }))
