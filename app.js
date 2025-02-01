@@ -1,23 +1,15 @@
 const ejsMate = require('ejs-mate');
 const express = require('express');
+const session = require('express-session');
+const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
+// const cookieParser = require('cookie-parser'); // alternatif untuk menampilkan cookie
 
 const app = express();
 const PORT = 3001;
 
-// utils
-const ErrorHandler = require('./utils/ErrorHandler');
-const wrapAsync = require('./utils/wrapAsync');
-
-// models
-const Place = require('./models/place');
-const Review = require('./models/review');
-
-// schemas
-const { placeSchema } = require('./schemas/place');
-const { reviewSchema } = require('./schemas/review');
 
 // connect to MongoDB
 mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
@@ -30,30 +22,36 @@ mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.n
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // middleware
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
-const validatePlace = (req, res, next) => {
-  const { error } = placeSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(",")
-    return next(new ErrorHandler(msg, 400))
-  } else {
-    next();
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ 
+  secret: 'passnya-kominfo',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    // secure: false, // jika true, hanya bisa diakses di https
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7
   }
-}
+}));
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
+// app.use(cookieParser()); // alternatif untuk menampilkan cookie
 
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(",")
-    return next(new ErrorHandler(msg, 400))
-  } else {
-    next();
-  }
-}
+// app.use((req, res, next) => {
+//   console.log("Session ID:", req.sessionID);
+//   console.log("Session Data:", req.session);
+//   console.log("Cookies:", req.cookies);
+//   next();
+// });
 
 // app.use((req, res, next) => {
 //   console.log(`Incoming Request: ${req.method} ${req.url}`);
@@ -64,67 +62,15 @@ app.get('/', (req, res) => {
   res.render('home');
 })
 
-app.get('/places', wrapAsync(async (req, res) => {
-  const places = await Place.find();
-  res.render('places/index', { places });
-}))
+app.use('/places', require('./routes/places'));
 
-app.get('/places/create', wrapAsync((req, res) => {
-  res.render('places/create');
-}))
+app.use('/places/:title/reviews', require('./routes/reviews'));
 
-app.post('/places', (req, res, next) => {
-  req.body = { place: req.body.place };
-  next();
-}, validatePlace, wrapAsync(async (req, res, next) => {
-  const place = new Place(req.body.place);
-  await place.save();
-  res.redirect('/places');
-}))
+app.get('/set-session', (req, res) => {
+  req.session.username = "test_user"; // Menyimpan data ke session
+  res.send("Session set!");
+});
 
-app.get('/places/:title', wrapAsync(async (req, res, next) => {
-  const place = await Place.findOne({ title: req.params.title }).populate('reviews');
-  if (place) {
-    res.render('places/show', { place });
-  } else {
-    next(new ErrorHandler('Page not found', 404));
-  }
-}))
-
-app.get('/places/:title/edit', wrapAsync(async (req, res) => {
-  const place = await Place.findOne({ title: req.params.title });
-  res.render('places/edit', { place });
-}))
-
-app.put('/places/:title', (req, res, next) => {
-  req.body = { place: req.body.place };
-  next();
-}, validatePlace, wrapAsync(async (req, res) => {
-  const place = await Place.findOneAndUpdate({ title: req.params.title }, { ...req.body.place });
-  res.redirect(`/places/${place.title}`);
-}));
-
-app.delete('/places/:title', wrapAsync(async (req, res) => {
-  const place = await Place.findOneAndDelete({ title: req.params.title });
-  res.redirect('/places');
-}))
-
-app.post('/places/:title/reviews', validateReview, wrapAsync(async (req, res) => {
-  const review = new Review(req.body.review);
-  const place = await Place.findOne({ title: req.params.title });
-  place.reviews.push(review);
-  await review.save();
-  await place.save();
-  res.redirect(`/places/${place.title}`);
-}))
-
-app.delete('/places/:title/reviews/:reviewId', wrapAsync(async (req, res) => {
-  const { title, reviewId } = req.params;
-  await Place.findOneAndUpdate({ title }, { $pull: { reviews: reviewId } });
-  // await Place.findOneAndUpdate({ title }, { $pull: { reviews: { _id: req.params.reviewId } } });
-  await Review.findByIdAndDelete(reviewId);
-  res.redirect(`/places/${title}`);
-}))
 
 // app.get('/seed/place', async (req, res) => {
 //   const place = new Place({
