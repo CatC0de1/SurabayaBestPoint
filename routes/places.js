@@ -10,6 +10,7 @@ const wrapAsync = require('../utils/wrapAsync');
 
 const isValidObjectId = require('../middlewares/isValidObjectID');
 const isAuth = require('../middlewares/isAuth');
+const isAuthorPlace = require('../middlewares/isAuthor').isAuthorPlace;
 
 const router = express.Router();
 
@@ -40,7 +41,15 @@ router.post('/', isAuth, validatePlace, wrapAsync(async (req, res, next) => {
 }))
 
 router.get('/:title', isValidObjectId('/places'), wrapAsync(async (req, res, next) => {
-  const place = await Place.findOne({ title: req.params.title }).populate('reviews');
+  const place = await Place.findOne({ title: req.params.title })
+    .populate({
+      path: 'reviews',
+      populate: {
+        path: 'author'
+      }
+    })
+    .populate('author');
+  // console.log(place);
   if (place) {
     res.render('places/show', { place });
   } else {
@@ -48,22 +57,22 @@ router.get('/:title', isValidObjectId('/places'), wrapAsync(async (req, res, nex
   }
 }))
 
-router.get('/:title/edit', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.get('/:title/edit', isAuth, isAuthorPlace, isValidObjectId('/places'), wrapAsync(async (req, res) => {
   const place = await Place.findOne({ title: req.params.title });
   res.render('places/edit', { place });
 }))
 
-router.put('/:title', isAuth, isValidObjectId('/places'), (req, res, next) => {
+router.put('/:title', isAuth, isAuthorPlace, isValidObjectId('/places'), (req, res, next) => {
   req.body = { place: req.body.place };
   next();
 }, validatePlace, wrapAsync(async (req, res) => {
   const { title } = req.params;
-  const place = await Place.findOneAndUpdate({ title }, { ...req.body.place }, { new: true });
+  place = await Place.findOneAndUpdate({ title }, { ...req.body.place }, { new: true });
   req.flash('success_msg', 'Place updated successfully!');
   res.redirect(`/places/${place.title}`);
 }));
 
-router.delete('/:title', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.delete('/:title', isAuth, isAuthorPlace, isValidObjectId('/places'), wrapAsync(async (req, res) => {
   const place = await Place.findOneAndDelete({ title: req.params.title });
   req.flash('success_msg', 'Place deleted successfully!');
   res.redirect('/places');
