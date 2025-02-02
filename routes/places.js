@@ -8,7 +8,8 @@ const { placeSchema } = require('../schemas/place');
 const ErrorHandler = require('../utils/ErrorHandler');
 const wrapAsync = require('../utils/wrapAsync');
 
-const isValidObjectId = require('../middleware/isValidObjectID');
+const isValidObjectId = require('../middlewares/isValidObjectID');
+const isAuth = require('../middlewares/isAuth');
 
 const router = express.Router();
 
@@ -27,11 +28,11 @@ router.get('/', wrapAsync(async (req, res) => {
   res.render('places/index', { places });
 }))
 
-router.get('/create', wrapAsync((req, res) => {
+router.get('/create', isAuth, wrapAsync((req, res) => {
   res.render('places/create');
 }))
 
-router.post('/', validatePlace, wrapAsync(async (req, res, next) => {
+router.post('/', isAuth, validatePlace, wrapAsync(async (req, res, next) => {
   const place = new Place(req.body.place);
   await place.save();
   req.flash('success_msg', 'Place added successfully!');
@@ -47,12 +48,12 @@ router.get('/:title', isValidObjectId('/places'), wrapAsync(async (req, res, nex
   }
 }))
 
-router.get('/:title/edit', isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.get('/:title/edit', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
   const place = await Place.findOne({ title: req.params.title });
   res.render('places/edit', { place });
 }))
 
-router.put('/:title', isValidObjectId('/places'), (req, res, next) => {
+router.put('/:title', isAuth, isValidObjectId('/places'), (req, res, next) => {
   req.body = { place: req.body.place };
   next();
 }, validatePlace, wrapAsync(async (req, res) => {
@@ -62,7 +63,7 @@ router.put('/:title', isValidObjectId('/places'), (req, res, next) => {
   res.redirect(`/places/${place.title}`);
 }));
 
-router.delete('/:title', isValidObjectId('/places'), wrapAsync(async (req, res) => {
+router.delete('/:title', isAuth, isValidObjectId('/places'), wrapAsync(async (req, res) => {
   const place = await Place.findOneAndDelete({ title: req.params.title });
   req.flash('success_msg', 'Place deleted successfully!');
   res.redirect('/places');
