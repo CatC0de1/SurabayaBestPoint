@@ -1,65 +1,102 @@
 <% layout('layouts/app') %>
 
-<h1 class="text-center">Update Place</h1>
-<div class="col-10 offset-1">
-  <form action="/places/<%= place.title %>?_method=PUT" method="POST" class="validated-form" novalidate>
-
-    <div class="mb-3">
-      <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" name="place[title]" id="title" value="<%= place.title %>" required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out name of BestPoint!
-      </div>
-    </div>
+<h1 class="text-center">Edit Place</h1>
+<div class="row mb-5">
+  <div class="col-6 <%= !place.images.length > 0 ? 'offset-3' : '' %>">
+    <form action="/places/<%= place.title %>?_method=PUT" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
   
-    <div class="mb-3">
-      <label for="location" class="form-label">Location</label>
-      <input type="text" class="form-control" name="place[location]" id="location" value="<%= place.location %>" required>
-      <div class="valid-feedback">
-        Looks good!
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" name="place[title]" id="title" value="<%= place.title %>" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out name of BestPoint!
+        </div>
       </div>
-      <div class="invalid-feedback">
-        Please fill out location of BestPoint!
+    
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" class="form-control" name="place[location]" id="location" value="<%= place.location %>" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out location of BestPoint!
+        </div>
       </div>
-    </div>
+    
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" name="place[description]" id="description" required><%= place.description %></textarea>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out description of BestPoint!
+        </div>
+      </div>
+    
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="text" class="form-control" name="place[price]" id="price" value="<%= place.price %>" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out price of BestPoint!
+        </div>
+      </div>
+    
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" class="form-control" name="image" id="image" accept="image/*" multiple>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out image file of BestPoint!
+        </div>
+      </div>
   
-    <div class="mb-3">
-      <label for="description" class="form-label">Description</label>
-      <textarea class="form-control" name="place[description]" id="description" required><%= place.description %></textarea>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out description of BestPoint!
-      </div>
+      <button type="submit" class="btn btn-success">Save</button>
+    
+    </form>
+  </div>
+  <% if (place.images.length > 0 ) { %>
+  <div class="col-6">
+    <h5 class="text-center">Delete Images</h5>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="checkAll">
+      <label for="checkAll" class="form-check-label">Check All</label>
     </div>
-  
-    <div class="mb-3">
-      <label for="price" class="form-label">Price</label>
-      <input type="text" class="form-control" name="place[price]" id="price" value="<%= place.price %>" required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out price of BestPoint!
-      </div>
-    </div>
-  
-    <div class="mb-3">
-      <label for="image" class="form-label">Image</label>
-      <input type="text" class="form-control" name="place[image]" id="image" value="<%= place.image %>" required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out image of BestPoint with url link!
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-success">Save</button>
-  
-  </form>
+    <form action="/places/<%= place.title %>/images?_method=DELETE" method="POST" class="d-flex flex-wrap">
+      <% place.images.forEach((image, index) => { %>
+        <div class="col-md-4">
+          <div class="card mb-3">
+            <img src="/images/<%= image.filename %>" alt="<%= place.title %>" class="card-img-top">
+            <div class="card-body">
+              <label class="custom-checkbox">
+                <input type="checkbox" name="images[]" value="<%= image.url %>">
+                <span class="custom-checkbox-text">Select</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+      <div class="w-100"></div>
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+  <% } %>
 </div>
+
+<script>
+  document.getElementById('checkAll').addEventListener('change', function() {
+    const checkboxes = document.getElementsByName('images[]');
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = this.checked;
+    }
+  });
+</script>
