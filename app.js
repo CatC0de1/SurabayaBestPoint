@@ -14,6 +14,8 @@ const PORT = 3001;
 
 const User = require('./models/user');
 
+// utils
+const ExpressError = require('./utils/ErrorHandler');
 
 // connect to MongoDB
 mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
@@ -106,7 +108,7 @@ app.get('/set-session', (req, res) => {
 // })
 
 app.all('*', (req, res, next) => {
-  next(new ErrorHandler('Page not found', 404));
+  next(new ExpressError('Page not found', 404));
 })
 
 app.use((err, req, res, next) => {

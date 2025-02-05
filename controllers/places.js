@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const Place = require('../models/place');
+const Review = require('../models/review');
 
 const ExpressError = require('../utils/ErrorHandler');
 
@@ -70,6 +71,11 @@ module.exports.destroy = async (req, res) => {
     place.images.forEach(image => {
       fs.unlinkSync(image.url, err => new ExpressError(err));
     });
+
+    // pseucode untuk menghapus review ketika place dihapus
+  // if (review) {
+  //   await Review.deleteMany({ _id: { $in: place.reviews } });
+  // }
 
     await place.deleteOne();
   }
