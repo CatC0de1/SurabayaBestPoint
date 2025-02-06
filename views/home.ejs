@@ -1,22 +1,100 @@
-<% layout('layouts/app') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <title>Surabaya BasePoint - Explore the Great Surabaya</title>
+</head>
+<body>
+    
+  <!-- <header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a href="/" class="navbar-brand">Surabaya BestPoints</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-<style>
-    body {
-      background-image: url('/images/surabaya.jpg');
-      background-size: cover;
-      background-position: center;
-      margin: 0;
-      height: 100vh;
-      color: white;
-    }
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item d-flex flex-row gap-3">
+              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="/places">Explore</a>
+            </li>
+          </ul>
 
-    .custom-navbar {
-      background-color: rgba(0, 0, 0, 0);
-    }
-</style>
+          <div class="navbar-nav d-flex flex-row gap-3">
+            <% if (!currentUser) { %>
+              <a class="nav-link" href="/register">Register</a>
+              <a class="nav-link" href="/login">Login</a>
+            <% } else { %>
+              <a class="nav-link" href="/logout" 
+              onclick="
+                event.preventDefault(); 
+                document.getElementById('logout-form').submit();
+              ">Logout</a>
+              <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+            <% } %>
+          </div>
 
-<div class="container mt-5">
-    <h1>Welcome to Surabaya BestPoint!</h1>
-    <p>Enjoy exploring Surabaya.</p>
-    <a href="/places" class="btn btn-primary btn-get-started">Get Started</a>
-</div>
+        </div>
+
+      </div>
+    </nav>
+  </header> -->
+
+  <header>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand mx-4" href="/">Surabaya Bestpoint</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav d-flex flex-row gap-3 me-auto mb-2 mb-lg-0">
+            <a class="nav-link" aria-current="page" href="/">Home</a>
+            <a class="nav-link" href="/places">Explore</a>
+          </div>
+    
+          <div class="navbar-nav d-flex flex-row gap-3">
+            <% if(!currentUser) { %>
+            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/register">Register</a>
+            <% } else { %>
+            <a class="nav-link" href="/logout" onclick="
+              event.preventDefault();
+              document.getElementById('logout-form').submit();
+            ">logout</a>
+            <form action="/logout" method="POST" style="display: none;" id="logout-form"></form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero-section">
+    <div class="container">
+      <h1>Surabaya BestPoints</h1>
+      <h4 class="subtitle">Discover the Best Points for Your Perfect Vacation in Surabaya</h4>
+
+      <div class="mt-4 btn-group-center">
+        <a href="/places" class="btn btn-outline-light">Explore Places</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; Surabaya Bestpoint <%= new Date().getFullYear() %>
+  </footer>
+    
+  <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/validate-form.js"></script>
+
+</body>
+</html>
