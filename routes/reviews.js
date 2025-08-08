@@ -8,7 +8,7 @@ const ReviewController = require('../controllers/reviews');
 const wrapAsync = require('../utils/wrapAsync');
 
 // middlewares
-const isValidObjectId = require('../middlewares/isValidObjectID');
+const isValidObjectId = require('../middlewares/isValidObjectId');
 const isAuth = require('../middlewares/isAuth');
 const { isAuthorReview } = require('../middlewares/isAuthor');
 const { validateReview } = require('../middlewares/validator');
