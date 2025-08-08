@@ -19,12 +19,22 @@ const User = require('./models/user');
 const ExpressError = require('./utils/ErrorHandler');
 
 // connect to MongoDB
-mongoose.connect(process.env.DATABASE)
-  .then((result) => {
-    console.log('connected to mongodb atlas')
-  }).catch((err) => {
-    console.log(err)
-});
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.DATABASE, {
+      serverSelectionTimeoutMS: 30000 // default 30 detik
+    })
+      .then((result) => {
+        console.log('connected to mongodb atlas')
+      }).catch((err) => {
+        console.log(err)
+    });
+  } catch (error) {
+    console.log(err);
+  }
+}
+
+connectDB();
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
@@ -35,7 +45,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ 
-  secret: 'passnya-kominfo',
+  secret: process.env.SESSION,
   resave: false,
   saveUninitialized: false,
   cookie: {
