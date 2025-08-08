@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const path = require('path');
+require('dotenv').config();
 // const cookieParser = require('cookie-parser'); // alternatif untuk menampilkan cookie
 
 const app = express();
@@ -18,7 +19,7 @@ const User = require('./models/user');
 const ExpressError = require('./utils/ErrorHandler');
 
 // connect to MongoDB
-mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
+mongoose.connect(process.env.DATABASE)
   .then((result) => {
     console.log('connected to mongodb atlas')
   }).catch((err) => {

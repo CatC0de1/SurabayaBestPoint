@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Place = require('../models/place');
+require('dotenv').config();
 // const hereMaps = require('../utils/hereMaps');
 
-mongoose.connect('mongodb+srv://orgSby:cmJCFrfuOpvS3NsA@cluster0.ojr60.mongodb.net/SurabayaBestPoint?retryWrites=true&w=majority')
+mongoose.connect(process.env.DATABASE)
     .then((result) => {
         console.log('connected to mongodb atlas')
     }).catch((err) => {
