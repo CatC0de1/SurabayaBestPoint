@@ -4,6 +4,7 @@ const Place = require('../models/place');
 const Review = require('../models/review');
 
 const ExpressError = require('../utils/ErrorHandler');
+const getWIBDate = require('../utils/wibDate');
 
 module.exports.index = async (req, res) => {
   const places = await Place.find();
@@ -18,6 +19,10 @@ module.exports.store = async (req, res, next) => {
   const place = new Place(req.body.place);
   place.author = req.user._id;
   place.images = images;
+
+  place.createdAt = getWIBDate();
+  place.updatedAt = getWIBDate();
+
   await place.save();
   req.flash('success_msg', 'Place added successfully!');
   res.redirect('/places');
@@ -57,8 +62,12 @@ module.exports.update = async (req, res) => {
       filename: file.filename
     }));
     place.images = images;
+
+    place.updatedAt = getWIBDate();
+
     await place.save();
   }
+
   req.flash('success_msg', 'Place updated successfully!');
   res.redirect(`/places/${place.title}`);
 }

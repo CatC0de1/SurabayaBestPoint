@@ -7,6 +7,14 @@ const placeSchema = new Schema({
   price: Number,
   description: String,
   location: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  },
   images: [
     {
       url: String,
