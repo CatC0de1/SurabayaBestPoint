@@ -48,7 +48,7 @@
   </header> -->
 
   <header>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
       <div class="container-fluid">
         <a class="navbar-brand mx-4" href="/">Surabaya Bestpoint</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,24 +56,27 @@
         </button>
         
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav d-flex flex-row gap-3 me-auto mb-2 mb-lg-0">
-            <a class="nav-link" aria-current="page" href="/">Home</a>
-            <a class="nav-link" href="/places">Explore</a>
-          </div>
-    
-          <div class="navbar-nav d-flex flex-row gap-3">
-            <% if(!currentUser) { %>
-            <a class="nav-link" href="/login">Login</a>
-            <a class="nav-link" href="/register">Register</a>
-            <% } else { %>
-            <a class="nav-link" href="/logout" onclick="
-              event.preventDefault();
-              document.getElementById('logout-form').submit();
-            ">logout</a>
-            <form action="/logout" method="POST" style="display: none;" id="logout-form"></form>
-            <% } %>
+          <div class="d-flex flex-grow-1 justify-content-around align-items-center">
+            <div class="navbar-nav d-flex flex-row gap-3 me-auto">
+              <a class="nav-link" aria-current="page" href="/">Home</a>
+              <a class="nav-link" href="/places">Explore</a>
+            </div>
+      
+            <div class="navbar-nav d-flex flex-row gap-3">
+              <% if(!currentUser) { %>
+              <a class="nav-link" href="/login">Login</a>
+              <a class="nav-link" href="/register">Register</a>
+              <% } else { %>
+              <a class="nav-link" href="/logout" onclick="
+                event.preventDefault();
+                document.getElementById('logout-form').submit();
+              ">logout</a>
+              <form action="/logout" method="POST" style="display: none;" id="logout-form"></form>
+              <% } %>
+            </div>
           </div>
         </div>
+
       </div>
     </nav>
   </header>
