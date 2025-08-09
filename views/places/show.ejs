@@ -87,8 +87,6 @@
   <div class="col-10 mx-auto col-lg-4">
   
     <h2 class="text-center">Reviews</h2>
-    <hr/>
-
     
     <% if(currentUser) { %>
       <div class="card my-4 text-bg-light">
@@ -128,8 +126,13 @@
           </form>
         </div>
       </div>
+    <% } else { %>
+      <p class="mb-3">
+        Cannot leave a review🥺? Don't worry! You can leave a review after you <a href="/login">login</a> or <a href="/register">register</a> an account.
+      </p>
     <% } %>
 
+    <hr/>
     
     <% for(const review of place.reviews) { %>
       <div class="mt-3">
