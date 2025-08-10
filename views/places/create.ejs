@@ -1,23 +1,55 @@
 <% layout('layouts/app') %>
 
-<h1 class="text-center">Add Place</h1>
-<div class="col-10 offset-1">
+<h1 class="text-center mb-3">Add New Place</h1>
+<div class="col-10 col-lg-8 offset-1 offset-lg-2">
   <form action="/places" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
 
-    <div class="mb-3">
-      <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" name="place[title]" id="title" required>
-      <div class="valid-feedback">
-        Looks good!
+    <div class="mb-3 row g-2">
+      <div class="col-md-7">
+        <label for="title" class="form-label d-flex align-items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+          </svg>
+          Title
+        </label>
+        <input type="text" class="form-control bg-light" name="place[title]" id="title" placeholder="Place name" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out name of BestPoint!
+        </div>
       </div>
-      <div class="invalid-feedback">
-        Please fill out name of BestPoint!
+      <div class="d-none d-md-block col-md-5">
+        <label for="price" class="form-label d-none d-md-flex align-items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+            <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+            <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+          </svg>
+          Price
+        </label>
+        <div class="input-group">
+          <span class="input-group-text">Rp</span>
+          <input type="text" class="form-control bg-light" name="place[price]" placeholder="Example: 10000" id="price" required>
+        </div>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback">
+          Please fill out price of BestPoint! Must be integer!
+        </div>
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="location" class="form-label">Location</label>
-      <input type="text" class="form-control" name="place[location]" id="location" required>
+      <label for="location" class="form-label d-flex align-items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+          <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+          <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+        </svg>
+        Location
+      </label>
+      <input type="text" class="form-control bg-light" name="place[location]" id="location" placeholder="Example: Jl. Ketintang, Ketintang, Kec. Gayungan " required>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -27,8 +59,15 @@
     </div>
 
     <div class="mb-3">
-      <label for="description" class="form-label">Description</label>
-      <textarea class="form-control" name="place[description]" id="description" required></textarea>
+      <label for="description" class="form-label d-flex align-items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+          <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+          <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+          <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+        </svg>
+        Description
+      </label>
+      <textarea class="form-control bg-light" name="place[description]" id="description" placeholder="Place description" required></textarea>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -37,9 +76,18 @@
       </div>
     </div>
 
-    <div class="mb-3">
-      <label for="price" class="form-label">Price</label>
-      <input type="text" class="form-control" name="place[price]" id="price" required>
+    <div class="mb-3 d-md-none">
+      <label for="price" class="form-label d-flex align-items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+          <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+          <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+        </svg>
+        Price
+      </label>
+      <div class="input-group">
+        <span class="input-group-text">Rp</span>
+        <input type="text" class="form-control bg-light" name="place[price]" placeholder="Example: 10000" id="price" required>
+      </div>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -49,8 +97,14 @@
     </div>
 
     <div class="mb-3">
-      <label for="image" class="form-label">Image</label>
-      <input type="file" class="form-control" name="image" id="image" accept="image/*" multiple required>
+      <label for="image" class="form-label d-flex align-items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+          <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+          <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+        </svg>
+        Image
+      </label>
+      <input type="file" class="form-control bg-light" name="image" id="image" accept="image/*" multiple required>
       <div class="valid-feedback">
         Looks good!
       </div>
@@ -59,7 +113,14 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-success">Save</button>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success d-flex align-items-center justify-content-center gap-2 px-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+        </svg>
+        Submit
+      </button>
+    </div>
   
   </form>
 </div>
