@@ -20,11 +20,15 @@
         </div>
         <div class="carousel-inner">
 
-          <% place.images.forEach((image, index) => { %>
-          <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-            <img src="/images/<%= image.filename %>" class="d-block w-100" alt="<%= image.title %>">
-          </div>
-          <% }) %>
+          <% if (place.images.length > 0) { %>
+            <% place.images.forEach((image, index) => { %>
+              <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                <img src="/images/places/<%= image.filename %>" class="card-img-top w-100" alt="<%= image.title %>">
+              </div>
+            <% }) %>
+          <% } else { %>
+            <img src="/images/placeholder.jpg" class="card-img-top w-100" alt="No image available for <%= place.title %>">
+          <% } %>
 
         </div>
     
@@ -41,7 +45,7 @@
 
       </div>
       <div class="card-body">
-        <h3 class="card-title"><%= place.title %></h3>
+        <h3 class="card-title fs-1"><%= place.title %></h3>
         <p class="card-text"></p>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">Location: <%= place.location %></li>

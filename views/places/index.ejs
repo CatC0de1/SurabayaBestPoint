@@ -8,7 +8,11 @@
     <div class="card mb-3 <%= (currentUser && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
       <div class="row">
         <div class="col-md-5 col-xl-4">
-          <img class="col-12 rounded img-fluid" src="/images/<%= place.images[0].filename %>" alt="<%= place.title %>" class="img-fluid">
+          <% if (place.images.length > 0) { %>
+            <img class="col-12 rounded-responsive img-fluid" src="/images/places/<%= place.images[0].filename %>" alt="<%= place.title %>">
+          <% } else { %>
+            <img class="col-12 rounded-responsive img-fluid" src="/images/placeholder.jpg" alt="No image available for <%= place.title %>">
+          <% } %>
         </div>
         <div class="col-md-7 col-xl-8 d-flex align-items-center">
           <div class="card-body">
@@ -28,9 +32,9 @@
                 </svg>
                 Price: <span class="ms-1 text-secondary">Rp <%= place.price %></span>
               </span>
-              <span class="text-muted">Last updated: <%= new Date(place.updatedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></span>
+              <span class="d-none d-lg-block text-muted">Last updated: <%= new Date(place.updatedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></span>
             </p>
-            <a href="places/<%= place.title %>" class="card-link btn btn-primary mt-4">View <%= place.title %></a>
+            <a href="places/<%= place.title %>" class="card-link btn btn-primary mt-lg-4">View <%= place.title %></a>
           </div>
         </div>
       </div>
@@ -47,3 +51,23 @@
     Add Place
   </a>
 </div>
+
+<style>
+  .rounded-responsive {
+    /* default (mobile): rounded top */
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* md and up -> rounded start (left) */
+  @media (min-width: 768px) {
+    .rounded-responsive {
+      border-top-left-radius: var(--bs-border-radius);
+      border-bottom-left-radius: var(--bs-border-radius);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+</style>

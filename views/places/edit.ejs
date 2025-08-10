@@ -1,24 +1,66 @@
 <% layout('layouts/app') %>
 
-<h1 class="text-center">Edit Place</h1>
-<div class="row mb-5">
-  <div class="col-6 <%= !place.images.length > 0 ? 'offset-3' : '' %>">
+<div class="d-flex justify-content-start mb-3">
+  <a href="/places/<%= place.title %>" class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M15 8a.5.5 0 0 1-.5.5H2.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 1 1 .708.708L2.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
+    </svg>
+    Back to Place
+  </a>
+</div>
+<h1 class="text-center mb-5">Edit "<%= place.title %>"</h1>
+
+<div class="row align-items-stretch">
+  <div class="h-100 mb-5 mb-lg-0 col-12 col-lg-7 <%= !place.images.length > 0 ? 'col-10 col-lg-8 offset-1 offset-lg-2' : '' %>">
+    <h3 class="text-center mb-3">Edit Place Credentials</h3>
     <form action="/places/<%= place.title %>?_method=PUT" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
   
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" name="place[title]" id="title" value="<%= place.title %>" required>
-        <div class="valid-feedback">
-          Looks good!
+      <div class="col-12 mb-3 row g-2">
+        <div class="col-12 col-md-7">
+          <label for="title" class="form-label d-flex align-items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+            </svg>
+            Title
+          </label>
+          <input type="text" class="form-control bg-light" name="place[title]" id="title" value="<%= place.title %>" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Please fill out name of BestPoint!
+          </div>
         </div>
-        <div class="invalid-feedback">
-          Please fill out name of BestPoint!
+        <div class="col-12 mt-3 mt-md-2 col-md-5">
+          <label for="price" class="form-label d-flex align-items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+              <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+              <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+            </svg>
+            Price
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">Rp</span>
+            <input type="number" class="form-control bg-light" name="place[price]" id="price" value="<%= place.price %>" step="1000" min="0" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please fill out price of BestPoint! Must be integer!
+            </div>
+          </div>
         </div>
       </div>
     
       <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input type="text" class="form-control" name="place[location]" id="location" value="<%= place.location %>" required>
+        <label for="location" class="form-label d-flex align-items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+          Location
+        </label>
+        <input type="text" class="form-control bg-light" name="place[location]" id="location" value="<%= place.location %>" required>
         <div class="valid-feedback">
           Looks good!
         </div>
@@ -28,8 +70,15 @@
       </div>
     
       <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" name="place[description]" id="description" required><%= place.description %></textarea>
+        <label for="description" class="form-label d-flex align-items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+            <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+          </svg>
+          Description
+        </label>
+        <textarea class="form-control bg-light" name="place[description]" rows="10" id="description" required><%= place.description %></textarea>
         <div class="valid-feedback">
           Looks good!
         </div>
@@ -39,64 +88,163 @@
       </div>
     
       <div class="mb-3">
-        <label for="price" class="form-label">Price</label>
-        <input type="text" class="form-control" name="place[price]" id="price" value="<%= place.price %>" required>
-        <div class="valid-feedback">
-          Looks good!
-        </div>
-        <div class="invalid-feedback">
-          Please fill out price of BestPoint!
-        </div>
-      </div>
-    
-      <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input type="file" class="form-control" name="image" id="image" accept="image/*" multiple>
-        <div class="valid-feedback">
-          Looks good!
-        </div>
-        <div class="invalid-feedback">
-          Please fill out image file of BestPoint!
-        </div>
+        <label for="image" class="form-label d-flex align-items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+          </svg>
+          Add new Image
+        </label>
+        <input type="file" class="form-control bg-light" name="image" id="image" accept="image/*" multiple>
+        <div id="image-preview" class="mt-2 pb-3 d-flex gap-3"></div>
       </div>
   
-      <button type="submit" class="btn btn-success">Save</button>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success d-flex align-items-center justify-content-center gap-2 px-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+          </svg>
+          Save
+        </button>
+      </div>
     
     </form>
   </div>
   <% if (place.images.length > 0 ) { %>
-  <div class="col-6">
-    <h5 class="text-center">Delete Images</h5>
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="checkAll">
-      <label for="checkAll" class="form-check-label">Check All</label>
+  <div class="card col-10 p-0 mx-auto col-lg-5 h-100">
+    <h3 class="card-header text-center">Delete Images</h3>
+    <div class="card-body">
+
+      <div class="custom-overflow">
+        <form id="deleteForm" action="/places/<%= place.title %>/images?_method=DELETE" method="POST" class="d-flex flex-wrap gap-2">
+          <% place.images.forEach((image, index) => { %>
+            <label class="card border border-3 text-bg-light mb-3 custom-checkbox btn-check-outline-primary">
+              <img src="/images/places/<%= image.filename %>" alt="<%= place.title %>" class="card-img-top img-fluid custom-images-size">
+              <div class="card-body mb-1 d-flex align-items-center gap-1">
+                <span class="icon-status">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                  </svg>      
+                </span>
+                <span class="text-status">
+                  Select
+                </span>
+              </div>
+              <input type="checkbox" class="btn-check" name="images[]" value="<%= image.url %>">
+            </label>
+          <% }) %>
+        </form>
+      </div>
+      
     </div>
-    <form action="/places/<%= place.title %>/images?_method=DELETE" method="POST" class="d-flex flex-wrap">
-      <% place.images.forEach((image, index) => { %>
-        <div class="col-md-4">
-          <div class="card mb-3">
-            <img src="/images/<%= image.filename %>" alt="<%= place.title %>" class="card-img-top">
-            <div class="card-body">
-              <label class="custom-checkbox">
-                <input type="checkbox" name="images[]" value="<%= image.url %>">
-                <span class="custom-checkbox-text">Select</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      <% }) %>
-      <div class="w-100"></div>
-      <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+    <div class="card-footer d-flex gap-3 justify-content-end">
+      <input type="checkbox" class="btn-check" id="checkAll">
+      <label for="checkAll" class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-1">
+        <span class="check-all-icon-status">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+          </svg>
+        </span>
+        <span class="check-all-text-status">
+          Select All
+        </span>
+      </label>
+      <button type="submit" form="deleteForm" class="btn btn-danger d-flex align-items-center justify-content-center gap-2 px-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+        </svg>
+        Delete
+      </button>
+    </div>
   </div>
   <% } %>
 </div>
 
-<script>
-  document.getElementById('checkAll').addEventListener('change', function() {
-    const checkboxes = document.getElementsByName('images[]');
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = this.checked;
+<style>
+  .custom-overflow {
+    overflow-y: auto;
+    height: 350px;
+  }
+
+  @media (min-width: 768px) {
+    .custom-overflow {
+      height: 400px;
     }
+  }
+
+  @media (min-width: 992px) { 
+    .custom-overflow {
+      height: 532px;
+      max-height: 100%;
+    }
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkAll = document.getElementById('checkAll');
+
+  // ambil checkbox list (Array supaya mudah dipakai)
+  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"][name="images[]"]'));
+
+  const SVG_SELECTED = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
+      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+      <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+    </svg>
+  `;
+
+  const SVG_UNSELECTED = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
+      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+    </svg>
+  `;
+
+  function updateCardUI(checkboxes) {
+    const card = checkboxes.closest('.card');
+    const iconEl = card.querySelector('.icon-status');
+    const textEl = card.querySelector('.text-status');
+
+    if (checkboxes.checked) {
+      card.classList.add('border-primary', 'text-bg-primary');
+      card.classList.remove('text-bg-light');
+      iconEl.innerHTML = SVG_SELECTED;
+      textEl.textContent = 'Selected';
+    } else {
+      card.classList.remove('border-primary', 'text-bg-primary');
+      card.classList.add('text-bg-light');
+      iconEl.innerHTML = SVG_UNSELECTED;
+      textEl.textContent = 'Select';
+    }
+  }
+
+  // attach listener & inisialisasi setiap checkbox
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => updateCardUI(cb));
+    updateCardUI(cb); // inisialisasi tampilan sesuai state awal
   });
+
+  // checkAll behaviour: ubah .checked dan dispatch event change agar UI terupdate
+  if (checkAll) {
+    const checkAllIconStatusEl = document.querySelector('.check-all-icon-status');
+    // const checkAllTextStatusEl = document.querySelector('.check-all-text-status');
+
+    checkAll.addEventListener('change', function () {
+      checkboxes.forEach(cb => {
+        cb.checked = this.checked;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+
+      if (this.checked) {
+        checkAllIconStatusEl.innerHTML = SVG_SELECTED;
+        // checkAllTextStatusEl.textContent = 'Unselect All';
+      } else {
+        checkAllIconStatusEl.innerHTML = SVG_UNSELECTED;
+        // checkAllTextStatusEl.textContent = 'Select All';
+      }
+    });
+  }
+});
+
 </script>

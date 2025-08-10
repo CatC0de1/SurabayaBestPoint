@@ -6,7 +6,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../public/images'));
+    cb(null, path.join(__dirname, '../public/images/places'));
   },
 
   filename: function (req, file, cb) {

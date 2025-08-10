@@ -54,14 +54,18 @@ module.exports.update = async (req, res) => {
   const { title } = req.params;
   const place = await Place.findOneAndUpdate({ title }, { ...req.body.place }, { new: true });
   if (req.files && req.files.length > 0) {
-    place.images.forEach(image => {
-      fs.unlinkSync(image.url, err => new ExpressError(err, next));
-    });
+    
+    // logic untuk menghapus gambar lama
+    // place.images.forEach(image => {
+    //   fs.unlinkSync(image.url, err => new ExpressError(err, next));
+    // });
+
     const images = req.files.map(file => ({
       url: file.path,
       filename: file.filename
     }));
-    place.images = images;
+    // place.images = images;  // logic untuk mengganti semua gambar
+    place.images.push(...images); // logic untuk menambahkan gambar baru
 
     place.updatedAt = getWIBDate();
 
@@ -69,7 +73,7 @@ module.exports.update = async (req, res) => {
   }
 
   req.flash('success_msg', 'Place updated successfully!');
-  res.redirect(`/places/${place.title}`);
+  res.redirect(`/places/${place.title}/edit`);
 }
 
 module.exports.destroy = async (req, res) => {
