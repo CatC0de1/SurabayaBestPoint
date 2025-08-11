@@ -59,8 +59,13 @@
         <h3 class="card-title fs-1"><%= place.title %></h3>
         <p class="card-text"></p>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">Location: <%= place.location %></li>
-          <li class="list-group-item">Price: Rp <%= place.price %></li>
+          <li class="list-group-item">
+            Location: 
+            <a href="https://www.google.com/maps/search/<%= place.title %>, <%= place.location %>" target="__blank" rel="noopener" class="text-decoration-none">
+              <%= place.location %>
+            </a>
+          </li>
+          <li class="list-group-item">Price: <span class="text-muted">Rp <%= place.price %></span></li>
         </ul>
         <div class="card-text my-4">
           <hr/>
