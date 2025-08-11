@@ -1,5 +1,7 @@
 <% layout('layouts/app') %>
 
+<%- include('../layouts/partials/filesAlert') %>
+
 <h1 class="text-center mb-3">Add New Place</h1>
 <div class="col-10 col-lg-8 offset-1 offset-lg-2">
   <form action="/places" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
@@ -83,8 +85,14 @@
           <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
         </svg>
         Image
+        <%- include('../layouts/partials/popover') %>
       </label>
-      <input type="file" class="form-control bg-light" name="image" id="image" accept="image/*" multiple>
+      <input type="file" class="d-none" name="image" id="image" accept="image/*" multiple>
+      <div class="bg-light border rounded d-flex align-items-center gap-3">
+        <button type="button" id="btnUpload" class="btn btn-outline-secondary">Chose Files</button>
+        <div id="fileCount" class="text-muted">No files chosen</div>
+      </div>
+      <div id="image-preview" class="mt-2 pb-3 d-flex gap-3 flex-nowrap overflow-x-auto"></div>
       <div id="image-preview" class="mt-2 pb-3 d-flex gap-3 flex-nowrap overflow-x-auto"></div>
     </div>
 

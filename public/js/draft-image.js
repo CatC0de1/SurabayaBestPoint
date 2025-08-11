@@ -1,14 +1,53 @@
 // Draft image cache
 let imageDrafts = [];
 
+function showAlert() {
+  const alertE1 = document.getElementById('filesAlert');
+  if (!alertE1) return;
+
+  alertE1.classList.remove('d-none');
+  alertE1.classList.add('d-flex');
+
+  if (showAlert.timeoutId) clearTimeout(showAlert.timeoutId);
+
+  showAlert.timeoutId = setTimeout(() => {
+    alertE1.classList.remove('d-flex');
+    alertE1.classList.add('d-none');
+  }, 5000);
+}
+
+function updateFileCount() {
+  const fileCount = document.getElementById('fileCount');
+  if (!fileCount) return;
+
+  if (imageDrafts.length === 0) {
+    fileCount.textContent = 'No files chosen';
+  } else if (imageDrafts.length === 1) {
+    fileCount.textContent = '1 file chosen';
+  } else {
+    fileCount.textContent = `${imageDrafts.length} files chosen`;
+  }
+}
+
+document.getElementById('btnUpload').addEventListener('click', function() {
+  document.getElementById('image').click();
+});
+
 document.getElementById('image').addEventListener('change', function(e) {
+  // Batasi jumlah gambar yang bisa diunggah
+  if (imageDrafts.length + e.target.files.length > 5) {
+    showAlert();
+    e.target.value = '';
+    return;
+  }
+    
   // Tambahkan file baru ke cache
   for (const file of e.target.files) {
     imageDrafts.push(file);
   }
   
   renderDraftImages();
-  // Reset input supaya bisa pilih file yang sama lagi jika perlu
+  updateFileCount();
   e.target.value = '';
 });
 
@@ -37,6 +76,7 @@ function renderDraftImages() {
       delBtn.onclick = () => {
         imageDrafts.splice(idx, 1);
         renderDraftImages();
+        updateFileCount();
       };
 
       const wrapper = document.createElement('div');
