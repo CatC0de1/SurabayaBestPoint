@@ -99,10 +99,10 @@ app.use('/', require('./routes/auth'));
 app.use('/places', require('./routes/places'));
 app.use('/places/:title/reviews', require('./routes/reviews'));
 
-app.get('/set-session', (req, res) => {
-  req.session.username = "test_user"; // Menyimpan data ke session
-  res.send("Session set!");
-});
+// app.get('/set-session', (req, res) => {
+//   req.session.username = "test_user"; // Menyimpan data ke session
+//   res.send("Session set!");
+// });
 
 
 // app.get('/seed/place', async (req, res) => {

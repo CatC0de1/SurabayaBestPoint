@@ -8,6 +8,10 @@ function getWIBDate() {
   return dayjs().tz('Asia/Jakarta').toDate();
 }
 
+function getWIBFormattedDate(date) {
+  return dayjs.tz(date, 'Asia/Jakarta').toDate();
+}
+
 function getPlaceStatus(createdAt) {
   if (!createdAt) return false;
 
@@ -19,5 +23,6 @@ function getPlaceStatus(createdAt) {
 
 module.exports = {
   getWIBDate,
-  getPlaceStatus
+  getPlaceStatus,
+  getWIBFormattedDate
 };

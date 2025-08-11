@@ -21,20 +21,30 @@ module.exports.index = async (req, res) => {
 }
 
 module.exports.store = async (req, res, next) => {
-  const images = req.files.map(file => ({
-    url: file.path,
-    filename: file.filename
-  }));
-  const place = new Place(req.body.place);
-  place.author = req.user._id;
-  place.images = images;
+  try {
+    const images = req.files.map(file => ({
+      url: file.path,
+      filename: file.filename
+    }));
+    const place = new Place(req.body.place);
+    place.author = req.user._id;
+    place.images = images;
+  
+    place.createdAt = getWIBDate();
+    place.updatedAt = getWIBDate();
+  
+    await place.save();
+    req.flash('success_msg', 'Place added successfully!');
+    res.redirect('/places');
+  } catch (error) {
+    // Cek error duplicate key MongoDB
+    if (error.code === 11000 && error.keyPattern.title) {
+      req.flash('error_msg', 'A place with this title already exists.');
+      return res.redirect('/places/create');
+    }
 
-  place.createdAt = getWIBDate();
-  place.updatedAt = getWIBDate();
-
-  await place.save();
-  req.flash('success_msg', 'Place added successfully!');
-  res.redirect('/places');
+    next(error);
+  }
 }
 
 module.exports.show = async (req, res, next) => {

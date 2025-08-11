@@ -1,43 +1,148 @@
 <% layout('layouts/app') %>
 
-<h1 class="text-center">Register</h1>
-<div class="col-10 offset-1">
-  <form action="/register" method="POST" class="validated-form" novalidate>
+<h1 class="text-center mt-2 mb-4">Register</h1>
+<div class="col-10 offset-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+  <form action="/register" method="POST" class="validated-form">
 
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" id="username" required>
-      <div class="valid-feedback">
-        Looks good!
+    <div class="row g-2 mb-3">
+      <div class="form-floating col-12 col-md-6">
+        <input type="text" class="form-control" name="username" id="username" placeholder="your_username" required>
+        <label for="username">Username</label>
       </div>
-      <div class="invalid-feedback">
-        Please fill your username!
+      <div class="form-floating col-12 col-md-6 mt-3 mt-md-2">
+        <input type="email" class="form-control" name="email" id="email" placeholder="youremail@email.com" required>
+        <label for="email">Email</label>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" name="email" id="email" required>
-      <div class="valid-feedback">
-        Looks good!
+    <div class="mb-5 d-flex flex-column flex-md-row gap-3 gap-md-2">
+      <div class="input-group">
+        <label for="birthday" class="input-group-text">Birthday</label>
+        <input type="text" class="form-control" id="birthday" placeholder="YYYY-MM-DD" name="birthday" required>
       </div>
-      <div class="invalid-feedback">
-        Please fill your email!
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" name="password" id="password" required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out your password!
+      <div class="input-group">
+        <label for="gender" class="input-group-text">Gender</label>
+        <select class="form-select" aria-label="Default select example" name="gender" id="gender" required>
+          <option selected disabled value="">Choose your gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
       </div>
     </div>
 
-    <button type="submit" class="btn btn-success">Register</button>
+    <div class="mb-3 input-group">
+      <div class="form-floating">
+        <input type="password" class="form-control" name="password" id="password" placeholder="your_password" aria-describedby="passwordHelpBlock" required>
+        <label for="password">Password</label>
+      </div>
+      <%- include('../layouts/partials/passwordToggle') %>
+      <div id="passwordHelpBlock" class="form-text w-100">
+        Your password must be at least 6 characters long, contain letters and numbers.
+      </div>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" name="passwordConfirmation" id="passwordConfirmation" placeholder="type your password again" required>
+      <label for="passwordConfirmation">Password Confirmation</label>
+    </div>
+
+    <p class="fs-6 text-muted">
+      <small>
+        Already have an account? 
+        <a href="/login" class="text-decoration-none">Sign in here</a>
+      </small>
+    </p>
+
+    <div class="g-recaptcha" data-sitekey="6Lc-PqIrAAAAACHP379FSGYBd44YVdw56h_ugVRA"></div>
+
+    <div class="mt-3 d-flex justify-content-end">
+      <button type="submit" class="btn btn-success d-flex align-items-center justify-content-center gap-2 px-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+          <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+        </svg>
+        Register
+      </button>
+    </div>
   
   </form>
 </div>
+
+<script>
+  const form = document.querySelector('.validated-form');
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+  const passwordConfirmation = document.getElementById('passwordConfirmation');
+
+  function isUsernameValid(username) {
+    const minLength = 3;
+    const usernamePattern = /^[a-z0-9_]+$/;
+    return (
+      name.length >= minLength &&
+      usernamePattern.test(name)
+    );
+  }
+
+  function isPasswordValid(pwd) {
+    const minLength = 6;
+    const hasLetter = /[a-zA-Z]/.test(pwd);
+    const hasNumber = /[0-9]/.test(pwd);
+    return minLength && hasLetter && hasNumber;
+  }
+
+  form.addEventListener('submit', function(event) {
+    let valid = true;
+
+    if (!isUsernameValid(username.value)) {
+      event.preventDefault();
+      username.setCustomValidity('Username must be at least 3 characters long, contain only lowercase letters, numbers, and underscores');
+      username.reportValidity();
+      valid = false;
+    } else {
+      username.setCustomValidity('');
+    }
+
+    if (!isPasswordValid(password.value)) {
+      event.preventDefault();
+      password.setCustomValidity('Password must be at least 6 characters long, contain letters and numbers');
+      password.reportValidity();
+      valid = false;
+    } else {
+      password.setCustomValidity('');
+    }
+
+    if (password.value !== passwordConfirmation.value) {
+      event.preventDefault();
+      passwordConfirmation.setCustomValidity('Passwords do not match');
+      passwordConfirmation.reportValidity();
+      valid = false;
+    } else {
+      passwordConfirmation.setCustomValidity('');
+    }
+
+    if (!valid) return;
+  });
+
+  username.addEventListener('input', function() { username.setCustomValidity(''); });
+  password.addEventListener('input', function() { password.setCustomValidity(''); });
+  passwordConfirmation.addEventListener('input', function() { passwordConfirmation.setCustomValidity(''); });
+</script>
+
+<script src="/moment/js/moment.min.js"></script>
+<script src="/pikaday/js/pikaday.js"></script>
+
+<script>
+  // Hitung batas tahun
+  const today = new Date();
+  const maxDate = today; // hari ini
+  const minDate = new Date(today.getFullYear() - 80, today.getMonth(), today.getDate());
+
+  new Pikaday({
+    field: document.getElementById('birthday'),
+    format: 'YYYY-MM-DD',
+    maxDate: maxDate,
+    minDate: minDate,
+    yearRange: [minDate.getFullYear(), maxDate.getFullYear()],
+    setDefaultDate: false
+  });
+</script>

@@ -1,7 +1,7 @@
 const { verifyRecaptcha } = require('../utils/recaptcha');
 
 async function recaptcha(req, res, next) {
-  const token = req.bodu['g-recaptcha-response'];
+  const token = req.body['g-recaptcha-response'];
 
   const result = await verifyRecaptcha(token);
 
