@@ -9,14 +9,26 @@
       <div class="row">
         <div class="col-md-5 col-xl-4">
           <% if (place.images.length > 0) { %>
-            <img class="col-12 rounded-responsive img-fluid" src="/images/places/<%= place.images[0].filename %>" alt="<%= place.title %>">
+            <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+              <% place.images.forEach((image, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                  <img src="/images/places/<%= image.filename %>" class="col-12 rounded-responsive img-fluid custom-object" alt="<%= image.title %>">
+                  <!-- <img class="col-12 rounded-responsive img-fluid" src="/images/places/<%= place.images[0].filename %>" alt="<%= place.title %>"> -->
+                </div>
+              <% }) %>
+            </div>
           <% } else { %>
             <img class="col-12 rounded-responsive img-fluid" src="/images/placeholder.jpg" alt="No image available for <%= place.title %>">
           <% } %>
         </div>
         <div class="col-md-7 col-xl-8 d-flex align-items-center">
           <div class="card-body">
-            <h3 class="card-title fs-2"><%= place.title %></h3>
+            <h3 class="card-title fs-2 d-flex align-items-center gap-3">
+              <%= place.title %>
+              <% if (place.isNew) { %>
+                <span class="fs-6 badge text-bg-secondary">New</span>
+              <% } %>    
+            </h3>
             <p class="card-text d-flex flex-column gap-1">
               <span class="d-flex align-items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
@@ -39,6 +51,27 @@
         </div>
       </div>
     </div>
+
+    <!-- <div class="card mb-3" aria-hidden="true">
+      <div class="row">
+        <div class="col-md-5 col-xl-4">
+          <img class="col-12 rounded-responsive img-fluid" src="..." alt="...">
+        </div>
+        <div class="col-md-7 col-xl-8 d-flex align-items-center">
+          <div class="card-body">
+            <h3 class="card-title placeholder-glow fs-2">
+              <span class="placeholder col-6"></span>
+            </h3>
+            <p class="card-text d-flex flex-column gap-1">
+              <span class="placeholder col-7"></span>
+              <span class="placeholder col-3"></span>
+              <span class="placeholder col-5"></span>
+            </p>
+            <a href="places/<%#= place.title %>" class="card-link disabled placeholder col-4 btn btn-primary mt-lg-4"></a>
+          </div>
+        </div>
+      </div>
+    </div> -->
   <% } %>
     
 </ul>
@@ -61,6 +94,12 @@
     border-bottom-right-radius: 0;
   }
 
+  .custom-object {
+    height: 200px; 
+    object-fit: cover; 
+    object-position: center;
+  }
+
   /* md and up -> rounded start (left) */
   @media (min-width: 768px) {
     .rounded-responsive {
@@ -68,6 +107,10 @@
       border-bottom-left-radius: var(--bs-border-radius);
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+    }
+
+    .custom-object {
+      height: 250px;
     }
   }
 </style>

@@ -4,46 +4,57 @@
 
 <!-- <a href="/places" class="btn btn-primary mb-5 px-4">Back</a> -->
 
+<h1 class="text-center mb-5">One of the BestPoint, <%= place.title %>!</h1>
+
 <div class="row">
 
   <!-- Start of place card -->
 
   <div class="col-12 col-lg-8">
     <div class="card mb-5 <%= (currentUser && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
-      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
+      
+      <% if (place.images.length > 0) { %>
+        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
 
-          <% if(place.images.length > 1 ) { place.images.forEach((image, index) => { %>
-            <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="<%= index %>" class="<%= index === 0 ? 'active' : '' %>" aria-current="<%= index === 0 ? 'true' : 'false' %>" aria-label="Slide <%= index + 1 %>"></button>
-          <% })} %>
+            <% if(place.images.length > 1 ) { place.images.forEach((image, index) => { %>
+              <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="<%= index %>" class="<%= index === 0 ? 'active' : '' %>" aria-current="<%= index === 0 ? 'true' : 'false' %>" aria-label="Slide <%= index + 1 %>"></button>
+            <% })} %>
 
-        </div>
-        <div class="carousel-inner">
+          </div>
+          <div class="carousel-inner">
 
-          <% if (place.images.length > 0) { %>
             <% place.images.forEach((image, index) => { %>
               <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                 <img src="/images/places/<%= image.filename %>" class="card-img-top w-100" alt="<%= image.title %>">
+                <figcaption class="carousel-caption d-none d-md-block">
+                  Photo of <%= place.title %>
+                </figcaption>
               </div>
             <% }) %>
-          <% } else { %>
-            <img src="/images/placeholder.jpg" class="card-img-top w-100" alt="No image available for <%= place.title %>">
-          <% } %>
-
-        </div>
+            
+          </div>
     
-        <% if(place.images.length > 1 ) { %>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-        <% } %>
+          <% if(place.images.length > 1 ) { %>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          <% } %>
+        
+        </div>
 
-      </div>
+      <% } else { %>
+        <img src="/images/placeholder.jpg" class="card-img-top figure-image w-100" alt="No image available for <%= place.title %>">
+        <figcaption class="figure-caption text-end d-none d-md-block">
+          No image available for <%= place.title %>
+        </figcaption>
+      <% } %>
+
       <div class="card-body">
         <h3 class="card-title fs-1"><%= place.title %></h3>
         <p class="card-text"></p>

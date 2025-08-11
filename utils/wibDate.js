@@ -8,4 +8,16 @@ function getWIBDate() {
   return dayjs().tz('Asia/Jakarta').toDate();
 }
 
-module.exports = getWIBDate;
+function getPlaceStatus(createdAt) {
+  if (!createdAt) return false;
+
+  const now = dayjs().tz('Asia/Jakarta');
+  const created = dayjs(createdAt).tz('Asia/Jakarta');
+
+  return now.diff(created, 'day') <= 7;
+}
+
+module.exports = {
+  getWIBDate,
+  getPlaceStatus
+};

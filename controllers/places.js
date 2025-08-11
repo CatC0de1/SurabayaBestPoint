@@ -4,11 +4,20 @@ const Place = require('../models/place');
 const Review = require('../models/review');
 
 const ExpressError = require('../utils/ErrorHandler');
-const getWIBDate = require('../utils/wibDate');
+const { getWIBDate } = require('../utils/wibDate');
+const { getPlaceStatus } = require('../utils/wibDate');
 
 module.exports.index = async (req, res) => {
   const places = await Place.find();
-  res.render('places/index', { places });
+
+  // Menambahkan status isNew pada setiap tempat
+  const placeWithStatus = places.map(place => {
+    const plain = place.toObject();
+    plain.isNew = getPlaceStatus(plain.createdAt);
+    return plain;
+  })
+
+  res.render('places/index', { places: placeWithStatus });
 }
 
 module.exports.store = async (req, res, next) => {

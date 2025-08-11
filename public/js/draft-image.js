@@ -26,7 +26,7 @@ function renderDraftImages() {
       // Tombol hapus draft
       const delBtn = document.createElement('button');
       delBtn.type = 'button';
-      delBtn.className = 'btn btn-sm btn-danger mt-1 d-flex align-items-center justify-content-center';
+      delBtn.className = 'btn btn-sm btn-outline-danger mt-1 d-flex align-items-center justify-content-center';
       delBtn.innerHTML = 
       `
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

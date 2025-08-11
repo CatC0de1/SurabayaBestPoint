@@ -30,7 +30,7 @@
         </label>
         <div class="input-group">
           <span class="input-group-text">Rp</span>
-          <input type="number" class="form-control bg-light" name="place[price]" placeholder="Example: 10000" id="price" step="1000" min="0" required>
+          <input type="number" class="form-control bg-light" name="place[price]" placeholder="Example: 10000" id="price" step="1" min="0" required>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -84,14 +84,8 @@
         </svg>
         Image
       </label>
-      <input type="file" class="form-control bg-light" name="image" id="image" accept="image/*" multiple required>
-      <div class="valid-feedback">
-        Looks good!
-      </div>
-      <div class="invalid-feedback">
-        Please fill out image file of BestPoint!
-      </div>
-      <div id="image-preview" class="mt-2 pb-3 d-flex flex-wrap gap-3"></div>
+      <input type="file" class="form-control bg-light" name="image" id="image" accept="image/*" multiple>
+      <div id="image-preview" class="mt-2 pb-3 d-flex gap-3 flex-nowrap overflow-x-auto"></div>
     </div>
 
     <div class="d-flex justify-content-end">
