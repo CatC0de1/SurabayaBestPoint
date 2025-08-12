@@ -1,9 +1,14 @@
 // Draft image cache
 let imageDrafts = [];
 
-function showAlert() {
+function showAlert(message) {
   const alertE1 = document.getElementById('filesAlert');
   if (!alertE1) return;
+
+  const alertMsg = alertE1.querySelector('.alert-message');
+  if (alertMsg) {
+    alertMsg.textContent = message;
+  }
 
   alertE1.classList.remove('d-none');
   alertE1.classList.add('d-flex');
@@ -36,13 +41,17 @@ document.getElementById('btnUpload').addEventListener('click', function() {
 document.getElementById('image').addEventListener('change', function(e) {
   // Batasi jumlah gambar yang bisa diunggah
   if (imageDrafts.length + e.target.files.length > 5) {
-    showAlert();
+    showAlert('Maximum 5 files are allowed!');
     e.target.value = '';
     return;
   }
     
-  // Tambahkan file baru ke cache
+  // Tambahkan file baru ke cache dan cek format file
   for (const file of e.target.files) {
+    if (!file.type.startsWith('image/')) {
+      showAlert('Only image files are allowed!');
+      continue;
+    }
     imageDrafts.push(file);
   }
   

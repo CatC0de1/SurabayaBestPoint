@@ -1,12 +1,12 @@
 const Place = require('../models/place');
 const Review = require('../models/review');
 
-const WIBDate = require('../utils/wibDate');
+const { getWIBDate } = require('../utils/wibDate');
 
 module.exports.store = async (req, res) => {
   const review = new Review(req.body.review);
   review.author = req.user._id;
-  review.createdAt = WIBDate();
+  review.createdAt = getWIBDate();
 
   const place = await Place.findOne({ title: req.params.title });
   place.reviews.push(review);

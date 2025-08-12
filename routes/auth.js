@@ -9,11 +9,20 @@ const AuthController = require('../controllers/auth');
 const wrapAsync = require('../utils/wrapAsync');
 
 // Middleware
+const { validateUser } = require('../middlewares/validator');
 const recaptcha = require('../middlewares/recaptcha');
 
 router.route('/register')
   .get(AuthController.registerForm)
-  .post(wrapAsync(AuthController.register));
+  .post(
+    // debug untuk cek req.body
+    // (req, res, next) => {
+    //   console.log('REQ BODY:', req.body);
+    //   next();
+    // },
+    // recaptcha,
+    validateUser,
+    wrapAsync(AuthController.register));
 
 router.route('/login')
   .get(AuthController.loginForm)

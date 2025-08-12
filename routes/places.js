@@ -10,8 +10,7 @@ const wrapAsync = require('../utils/wrapAsync');
 const isValidObjectId = require('../middlewares/isValidObjectId');
 const isAuth = require('../middlewares/isAuth');
 const { isAuthorPlace } = require('../middlewares/isAuthor');
-const { validatePlace } = require('../middlewares/validator');
-const multerErrorHandler = require('../middlewares/multerErrorHandler');
+const { validatePlace, validatePlaceImages } = require('../middlewares/validator');
 
 // config
 const upload = require('../config/multer');
@@ -20,7 +19,7 @@ const router = express.Router();
 
 router.route('/')
   .get(wrapAsync(PlaceController.index))
-  .post(isAuth, multerErrorHandler(upload.array('image', 5), 'create'), validatePlace, wrapAsync(PlaceController.store));
+  .post(isAuth, upload.array('image', 5), validatePlace, validatePlaceImages, wrapAsync(PlaceController.store));
   // .post(isAuth, upload.array('image', 5), (req, res) => {
   //   console.log(req.files);
   //   console.log(req.body);
@@ -36,7 +35,7 @@ router.route('/:title')
   .put(isAuth, isAuthorPlace, isValidObjectId('/places'), (req, res, next) => {
     req.body = { place: req.body.place };
     next();
-  }, multerErrorHandler(upload.array('image', 5), 'edit'), validatePlace, wrapAsync(PlaceController.update))
+  }, upload.array('image', 5), validatePlace, validatePlaceImages, wrapAsync(PlaceController.update))
   .delete(isAuth, isAuthorPlace, isValidObjectId('/places'), wrapAsync(PlaceController.destroy));
 
 router.get('/:title/edit', isAuth, isAuthorPlace, isValidObjectId('/places'), wrapAsync(PlaceController.edit));

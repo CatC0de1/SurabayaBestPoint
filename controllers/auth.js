@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const ExpressError = require('../utils/ErrorHandler');
 
 const { getWIBDate, getWIBFormattedDate } = require('../utils/wibDate');
 
@@ -8,23 +9,12 @@ module.exports.registerForm = (req, res) => {
 
 module.exports.register = async (req, res, next) => {
   try {
-    const { email, username, password, gender, birthday, passwordConfirmation } = req.body;
-
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-    if (!passwordRegex.test(password)) {
-      req.flash('error_msg', 'Password must be at least 6 characters long, contain letters and numbers.');
-      return res.redirect('/register');
-    }
-    
-    if (password !== passwordConfirmation) {
-      req.flash('error_msg', 'Passwords do not match.');
-      return res.redirect('/register');
-    }
+    const { email, username, password, gender, birthday } = req.body;
 
     const createdAt = getWIBDate(); 
-    const formattedBirthday = getWIBFormattedDate(birthday);
+    // const formattedBirthday = getWIBFormattedDate(birthday);
 
-    const user = new User({ email, username, gender, birthday: formattedBirthday, createdAt });
+    const user = new User({ email, username, gender, birthday, createdAt });
     const registerUser = await User.register(user, password);
 
     req.login(registerUser, err => {
@@ -33,16 +23,23 @@ module.exports.register = async (req, res, next) => {
       res.redirect('/places');
     })
   } catch (error) {
-    if (error.code === 11000 && error.keyPattern.email) {
-      req.flash('error_msg', 'Email already exists.');
-      return res.redirect('/register');
-    } else if (error.code === 11000 && error.keyPattern.username) {
-      req.flash('error_msg', 'Username already taken.');
-      return res.redirect('/register');
+    let msg;
+
+    // cek duplikat pada passport-local-mongoose dan mongoDB
+    if (error.name === 'UserExistsError' || error.code === 11000 && error.keyPattern?.title) {
+      msg = 'This username already taken';
+    } else if (error.code === 11000 && error.keyPattern?.email) {
+      msg = 'This email already exists';
+    } else if (error.message) {
+      msg = error.message;
     }
 
-    req.flash('error_msg', error.message);
-    res.redirect('/register');
+    if (req.headers.accept && req.headers.accept.includes('text/html')) {
+      req.flash('error_msg', msg);
+      return res.redirect('/register');
+    } else {
+      return next(new ExpressError(msg, 400));
+    }
   }
 }
 

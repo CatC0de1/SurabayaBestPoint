@@ -37,13 +37,15 @@ module.exports.store = async (req, res, next) => {
     req.flash('success_msg', 'Place added successfully!');
     res.redirect('/places');
   } catch (error) {
-    // Cek error duplicate key MongoDB
-    if (error.code === 11000 && error.keyPattern.title) {
-      req.flash('error_msg', 'A place with this title already exists.');
-      return res.redirect('/places/create');
-    }
+    let msg = 'A place with this title already exists';
 
-    next(error);
+    // Cek error duplicate key MongoDB
+    if (error.code === 11000 && error.keyPattern?.title) {
+      req.flash('error_msg', msg);
+      return res.redirect('/places/create');
+    } else {
+      return next(new ExpressError(msg, 400));
+    }
   }
 }
 
@@ -69,50 +71,73 @@ module.exports.edit = async (req, res) => {
   res.render('places/edit', { place });
 }
 
-module.exports.update = async (req, res) => {
-  const { title } = req.params;
-  const place = await Place.findOneAndUpdate({ title }, { ...req.body.place }, { new: true });
-  if (req.files && req.files.length > 0) {
-    
-    // logic untuk menghapus gambar lama
-    // place.images.forEach(image => {
-    //   fs.unlinkSync(image.url, err => new ExpressError(err, next));
-    // });
+module.exports.update = async (req, res, next) => {
+  try {
+    const { title } = req.params;
+    const place = await Place.findOneAndUpdate({ title }, { ...req.body.place }, { new: true });
+    if (req.files && req.files.length > 0) {
+      
+      // logic untuk menghapus gambar lama
+      // place.images.forEach(image => {
+      //   fs.unlinkSync(image.url, err => new ExpressError(err, next));
+      // });
+  
+      const images = req.files.map(file => ({
+        url: file.path,
+        filename: file.filename
+      }));
+      // place.images = images;  // logic untuk mengganti semua gambar
+      place.images.push(...images); // logic untuk menambahkan gambar baru
+  
+      place.updatedAt = getWIBDate();
+  
+      await place.save();
+    }
+  
+    req.flash('success_msg', 'Place updated successfully!');
+    res.redirect(`/places/${place.title}/edit`);
+  } catch (error) {
+    let msg = 'A place with this title already exists';
 
-    const images = req.files.map(file => ({
-      url: file.path,
-      filename: file.filename
-    }));
-    // place.images = images;  // logic untuk mengganti semua gambar
-    place.images.push(...images); // logic untuk menambahkan gambar baru
-
-    place.updatedAt = getWIBDate();
-
-    await place.save();
+    // Cek error duplicate key MongoDB
+    if (error.code === 11000 && error.keyPattern?.title) {
+      req.flash('error_msg', msg);
+      return res.redirect('/places/create');
+    } else {
+      return next(new ExpressError(msg, 400));
+    }
   }
-
-  req.flash('success_msg', 'Place updated successfully!');
-  res.redirect(`/places/${place.title}/edit`);
 }
 
-module.exports.destroy = async (req, res) => {
-  // const place = await Place.findOneAndDelete({ title: req.params.title });
-  const { title } = req.params;
-  const place = await Place.findOne({ title });
-  if (place.images.length > 0) {
-    place.images.forEach(image => {
-      fs.unlinkSync(image.url, err => new ExpressError(err));
-    });
+module.exports.destroy = async (req, res, next) => {
+  try {
+    // const place = await Place.findOneAndDelete({ title: req.params.title });
+    const { title } = req.params;
+    const place = await Place.findOne({ title });
 
-    // pseucode untuk menghapus review ketika place dihapus
-  // if (review) {
-  //   await Review.deleteMany({ _id: { $in: place.reviews } });
-  // }
+    if (place.images.length > 0) {
+      place.images.forEach(image => {
+        try {
+          fs.unlinkSync(image.url);
+        } catch (error) {
+          next(new ExpressError('Failed to delete image', 500));
+        }
+      });
+    }
 
-    await place.deleteOne();
+    // cara manual
+    // if (place.reviews.length > 0) {
+    //   await Review.deleteMany({ _id: { $in: place.reviews } });
+    // }
+    // await place.deleteOne();
+
+    await Place.findOneAndDelete({ title });
+
+    req.flash('success_msg', 'Place deleted successfully!');
+    res.redirect('/places');
+  } catch (error) {
+    next(new ExpressError('Failed to delete place', 500));
   }
-  req.flash('success_msg', 'Place deleted successfully!');
-  res.redirect('/places');
 }
 
 module.exports.destroyImage = async (req, res) => {
