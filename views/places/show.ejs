@@ -1,6 +1,7 @@
 <% layout('layouts/app') %>
 
 <link rel="stylesheet" href="/css/stars.css">
+<link rel="stylesheet" href="/css/manualStars.css">
 
 <!-- <a href="/places" class="btn btn-primary mb-5 px-4">Back</a> -->
 
@@ -49,7 +50,7 @@
         </div>
 
       <% } else { %>
-        <img src="/images/placeholder.jpg" class="card-img-top figure-image w-100" alt="No image available for <%= place.title %>">
+        <img src="/images/places/placeholder.jpg" class="card-img-top figure-image w-100" alt="No image available for <%= place.title %>">
         <figcaption class="figure-caption text-end d-none d-md-block">
           No image available for <%= place.title %>
         </figcaption>
@@ -66,6 +67,22 @@
             </a>
           </li>
           <li class="list-group-item">Price: <span class="text-muted">Rp <%= place.price %></span></li>
+          <li class="list-group-item d-flex align-items-center gap-1">
+            Rating:
+            <span class="d-flex align-items-center gap-2">
+              <span class="fs-5 fw-bold">
+                <%= place.rating %>
+              </span>
+              <div class="d-flex flex-column justify-content-center align-items-start">
+                <span id="placeRating" class="stars starability-result" data-rating="<%= place.rating %>">
+                  <!-- <%= place.rating %> -->
+                </span>
+                <small id="placeRatingAlt" class="text-muted text-center">
+  
+                </small>
+              </div>
+            </span>
+          </li>
         </ul>
         <div class="card-text my-4">
           <hr/>
@@ -199,7 +216,12 @@
             <span>
               <% if(currentUser && review.author.equals(currentUser._id)) { %>
   
-                <button type="button" data-bs-toggle="modal" data-bs-target="#reviewDeleteConfirmationModal" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center">
+                <button 
+                  type="button" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#reviewDeleteConfirmationModal<%= review._id %>" 
+                  class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
@@ -207,11 +229,21 @@
                 </button>
   
                 <!-- Modal -->
-                <div class="modal fade" id="reviewDeleteConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div 
+                  class="modal fade" 
+                  id="reviewDeleteConfirmationModal<%= review._id %>" 
+                  data-bs-backdrop="static" 
+                  data-bs-keyboard="false" 
+                  tabindex="-1" 
+                  aria-labelledby="staticBackdropLabel<%= review._id %>" 
+                  aria-hidden="true"
+                >
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Confirmation</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel<%= review._id %>">
+                          Delete Confirmation
+                        </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -242,9 +274,9 @@
           <div class="card mb-3 <%= (currentUser && review.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
             <div class="card-body">
               <div class="d-flex align-items-center gap-1 mb-3">
-                <span class="text-muted me-2">Rated: </span>
-                <span style="display: inline-block; transform: scale(0.75); transform-origin: left;" class="starability-result" data-rating="<%= review.rating %>">
-                  <%= review.rating %>
+                <span class="text-muted">Rated: </span>
+                <span class="stars starability-result" data-rating="<%= review.rating %>">
+                  <!-- <%= review.rating %> -->
                 </span>
               </div>
               <p class="card-text"><%= review.body %></p>
@@ -259,3 +291,48 @@
   <!-- End of reviews section -->
 
 </div>
+
+<style>
+  .stars {
+    display: inline-block;
+    transform: scale(0.6);
+    transform-origin: left;
+  }
+  #placeRating {
+    transform: scale(0.75);
+  }
+</style>
+
+<script>
+  const ratingEl = document.getElementById('placeRating');
+  const ratingAltEl = document.getElementById('placeRatingAlt');
+
+  if (ratingEl && ratingAltEl) {
+    const rating = parseFloat(ratingEl.getAttribute('data-rating')) || 0;
+
+    let overview = '';
+    if (rating >= 5) {
+      overview = 'True BestPoint';
+    } else if (rating >= 4.5) {
+      overview = 'What a Great Place';
+    } else if (rating >= 4.0) {
+      overview = 'I like this Place';
+    } else if (rating >= 3.5) {
+      overview = 'Nice👍';
+    } else if (rating >= 3.0) {
+      overview = 'Not bad';
+    } else if (rating >= 2.5) {
+      overview = 'There something missing'
+    } else if (rating >= 2.0) {
+      overview = 'Need an improvment';
+    } else if (rating >= 1.5) {
+      overview = '. . .';
+    } else if (rating > 0) {
+      overview = 'Not the BestPoint';
+    } else {
+      overview = 'No rating?🥺';
+    }
+
+    ratingAltEl.textContent = overview;
+  }
+</script>

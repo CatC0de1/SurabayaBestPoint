@@ -30,7 +30,11 @@ const placeSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Review'
     }
-  ]
+  ],
+  rating: {
+    type: Number,
+    default: 0
+  }
 })
 
 placeSchema.post('findOneAndDelete', async function (doc) {

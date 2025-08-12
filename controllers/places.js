@@ -50,9 +50,16 @@ module.exports.store = async (req, res, next) => {
 }
 
 module.exports.show = async (req, res, next) => {
+  const sortOrder = req.query.sort === 'asc' ? 1 : -1
+
   const place = await Place.findOne({ title: req.params.title })
     .populate({
       path: 'reviews',
+      options: {
+        sort: {
+          createdAt: sortOrder
+        }
+      },
       populate: {
         path: 'author'
       }
