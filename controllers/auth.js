@@ -58,7 +58,7 @@ module.exports.logout = (req, res) => {
       return next(err);
     } else {
       req.flash('success_msg', 'Logged out successfully!');
-      res.redirect('/places');
+      res.redirect('/');
     }
   })
 }

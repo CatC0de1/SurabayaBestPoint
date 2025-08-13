@@ -20,14 +20,14 @@ router.route('/register')
     //   console.log('REQ BODY:', req.body);
     //   next();
     // },
-    // recaptcha,
+    recaptcha,
     validateUser,
     wrapAsync(AuthController.register));
 
 router.route('/login')
   .get(AuthController.loginForm)
   .post(
-    // recaptcha,
+    recaptcha,
     passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: {

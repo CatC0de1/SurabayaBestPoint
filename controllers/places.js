@@ -11,7 +11,7 @@ module.exports.index = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const ratingSort = req.query.rating || 'none';
   const orderSort = req.query.order || 'desc';
-
+  const search = req.query.search || '';
 
   const limit = 5;
   const skip = (page - 1) * limit;
@@ -25,12 +25,17 @@ module.exports.index = async (req, res) => {
   // Sorting by createdAt (terbaru/terlama)
   if (orderSort) sortOption.createdAt = orderSort === 'asc' ? 1 : -1;
 
-  const places = await Place.find()
+  let filter = {};
+  if (search) {
+    filter.title = { $regex: search, $options: 'i' };
+  }
+
+  const places = await Place.find(filter)
     .sort(sortOption)
     .skip(skip)
     .limit(limit);
     
-  const total = await Place.countDocuments();
+  const total = await Place.countDocuments(filter);
 
   // Menambahkan status isNew pada setiap tempat
   const placeWithStatus = places.map(place => {
@@ -44,7 +49,8 @@ module.exports.index = async (req, res) => {
     currentPage: page,
     totalPages: Math.ceil(total / limit),
     ratingSort,
-    orderSort
+    orderSort,
+    search
   });
 }
 
