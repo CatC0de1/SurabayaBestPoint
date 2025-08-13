@@ -241,7 +241,10 @@
               <div class="d-flex flex-row align-items-center justify-content-between w-100">
 
                 <span class="d-flex flex-column">
-                  <%= review.author.username %>
+                  <span class="d-flex flex-row align-items-center gap-1">
+                    <span>@<%= review.author.username %></span>
+                    <small class="badge rounded-pill text-bg-primary <%= review.author.equals(place.author) ? 'd-block' : 'd-none' %>">Author</small>
+                  </span>
                   <small class="text-muted"><%= new Date(review.createdAt).toLocaleString( 'en-US', { minute:'2-digit', hour:'2-digit', day: '2-digit', month: 'long', year: 'numeric' }) %></small>
                 </span>
           

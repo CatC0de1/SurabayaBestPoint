@@ -1,3 +1,4 @@
+// tidak berlaku jika url menggunakan title
 // const mongoose = require('mongoose');
 
 // module.exports = (redirectUrl = '/') => {
@@ -10,7 +11,7 @@
 
 //     const id = req.params[paramId];
 //     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       req.flash('error_msg', 'Invalid ID / Data not found');
+//       req.flash('error_msg', 'User ID not found');
 //       return res.redirect(redirectUrl);
 //     }
 
@@ -18,8 +19,6 @@
 //   }
 // }
 
-
-// masih belum digunakana sekarang, karena url menggunakan title
 
 module.exports = (redirectUrl = '/') => {
   return (req, res, next) => {

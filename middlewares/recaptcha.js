@@ -10,6 +10,7 @@ async function recaptcha(req, res, next) {
     return res.redirect('/login');
   }
 
+  delete req.body['g-recaptcha-response'];
   next();
 }
 
