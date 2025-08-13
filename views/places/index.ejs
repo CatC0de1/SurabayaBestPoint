@@ -1,89 +1,174 @@
 <% layout('layouts/app') %>
 
-<h1>All Places, Ready to Go!</h1>
-  
-<ul class="my-4">
 
-  <% for(const place of places) { %>
-    <div class="card mb-3 <%= (currentUser && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
-      <div class="row">
-        <div class="col-md-5 col-xl-4">
-          <% if (place.images.length > 0) { %>
-            <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
-              <% place.images.forEach((image, index) => { %>
-                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                  <img src="/images/places/<%= image.filename %>" class="col-12 rounded-responsive img-fluid custom-object" alt="<%= image.title %>">
-                  <!-- <img class="col-12 rounded-responsive img-fluid" src="/images/places/<%= place.images[0].filename %>" alt="<%= place.title %>"> -->
-                </div>
-              <% }) %>
-            </div>
-          <% } else { %>
-            <img class="col-12 rounded-responsive img-fluid" src="/images/places/placeholder.jpg" alt="No image available for <%= place.title %>">
-          <% } %>
+<% if (places.length === 0) { %>
+  <div class="text-center mt-5 pt-5 fs-4">
+    <p>
+      I think you must discover place for BestPoint of Surabaya first.
+    </p>
+    <p>
+      After that, please add place to share with others☺️
+    </p>
+  </div>
+  
+  <div class="d-flex justify-content-center mt-4">
+    <a href="/places/create" class="btn btn-outline-primary text-center d-flex align-items-center gap-2 px-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+      </svg>
+      Add Place
+    </a>
+  </div>
+  <% } else { %>
+    <div class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-self-center align-self-lg-center">
+      <h1>All Places, Ready to Go!</h1>
+    
+      <div class="d-flex justify-content-center align-items-center gap-3">
+        <!-- Sorting Order -->
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="text-muted">Sorting by order:</div>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Order sort group">
+            <input type="radio" class="btn-check" name="order" id="orderDesc" value="desc" <%= orderSort === 'desc' ? 'checked' : '' %>>
+            <label class="btn btn-outline-primary" for="orderDesc">Newest</label>
+          
+            <input type="radio" class="btn-check" name="order" id="orderAsc" value="asc" <%= orderSort === 'asc' ? 'checked' : '' %>>
+            <label class="btn btn-outline-primary" for="orderAsc">Oldest</label>
+          </div>
         </div>
-        <div class="col-md-7 col-xl-8 d-flex align-items-center">
-          <div class="card-body">
-            <h3 class="card-title fs-2 d-flex align-items-center gap-3">
-              <%= place.title %>
-              <% if (place.isNew) { %>
-                <span class="fs-6 badge text-bg-secondary">New</span>
-              <% } %>    
-            </h3>
-            <p class="card-text d-flex flex-column gap-1">
-              <span class="d-flex align-items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
-                  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                </svg>
-                <%= place.location %>
-              </span>
-              <span class="d-flex align-items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
-                  <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
-                  <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
-                </svg>
-                Price: <span class="ms-1 text-secondary">Rp <%= place.price %></span>
-              </span>
-              <span class="d-none d-lg-block text-muted">Last updated: <%= new Date(place.updatedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></span>
-            </p>
-            <a href="places/<%= place.title %>" class="card-link btn btn-primary mt-lg-4">View <%= place.title %></a>
+          
+        <!-- Sorting Rating -->
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="text-muted">Sorting by rating:</div>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Rating sort button group">
+            <input type="radio" class="btn-check" name="rating" id="ratingAsc" value="asc" <%= ratingSort === 'asc' ? 'checked' : '' %>>
+            <label class="btn btn-outline-primary" for="ratingAsc">Lowest</label>
+          
+            <input type="radio" class="btn-check" name="rating" id="ratingNone" value="none" <%= ratingSort === 'none' ? 'checked' : '' %>>
+            <label class="btn btn-outline-primary" for="ratingNone">None</label>
+    
+            <input type="radio" class="btn-check" name="rating" id="ratingDesc" value="desc" <%= ratingSort === 'desc' ? 'checked' : '' %>>
+            <label class="btn btn-outline-primary" for="ratingDesc">Highest</label>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- <div class="card mb-3" aria-hidden="true">
-      <div class="row">
-        <div class="col-md-5 col-xl-4">
-          <img class="col-12 rounded-responsive img-fluid" src="..." alt="...">
-        </div>
-        <div class="col-md-7 col-xl-8 d-flex align-items-center">
-          <div class="card-body">
-            <h3 class="card-title placeholder-glow fs-2">
-              <span class="placeholder col-6"></span>
-            </h3>
-            <p class="card-text d-flex flex-column gap-1">
-              <span class="placeholder col-7"></span>
-              <span class="placeholder col-3"></span>
-              <span class="placeholder col-5"></span>
-            </p>
-            <a href="places/<%#= place.title %>" class="card-link disabled placeholder col-4 btn btn-primary mt-lg-4"></a>
+  <ul class="my-4">
+
+    <% for(const place of places) { %>
+      <div class="card mb-3 <%= (currentUser && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
+        <div class="row">
+          <div class="col-md-5 col-xl-4">
+            <% if (place.images.length > 0) { %>
+              <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <% place.images.forEach((image, index) => { %>
+                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                    <img src="/images/places/<%= image.filename %>" class="col-12 rounded-responsive img-fluid custom-object" alt="<%= image.title %>">
+                    <!-- <img class="col-12 rounded-responsive img-fluid" src="/images/places/<%= place.images[0].filename %>" alt="<%= place.title %>"> -->
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <img class="col-12 rounded-responsive img-fluid custom-object" src="/images/places/placeholder.jpg" alt="No image available for <%= place.title %>">
+            <% } %>
+          </div>
+          <div class="col-md-7 col-xl-8 d-flex align-items-center">
+            <div class="card-body">
+              <h3 class="card-title fs-2 d-flex align-items-center gap-3">
+                <%= place.title %>
+                <% if (place.isNew) { %>
+                  <span class="fs-6 badge text-bg-secondary">New</span>
+                <% } %>    
+              </h3>
+              <p class="card-text d-flex flex-column gap-1">
+                <span class="d-flex align-items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                  </svg>
+                  <%= place.location %>
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <span class="text-secondary">
+                    Rating: 
+                  </span>
+                  <% if (place.rating === 0) { %>
+                    <small class="text-muted fst-italic">no rating</small>
+                  <% } else { %>
+                    <span class="text-warning fw-bold"><%= place.rating %></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="#ffc107" class="bi bi-star-fill" viewBox="0 0 16 16">
+                      <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                  <% } %>
+                </span>
+                <span class="d-none d-lg-flex align-items-center gap-1">
+                  <span class="text-secondary">Last updated: </span>
+                  <%= new Date(place.updatedAt).toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }) %>
+                </span>
+              </p>
+              <a href="places/<%= place.title %>" class="card-link btn btn-primary mt-lg-4">View <%= place.title %></a>
+            </div>
           </div>
         </div>
       </div>
-    </div> -->
-  <% } %>
-    
-</ul>
+  
+      <!-- <div class="card mb-3" aria-hidden="true">
+        <div class="row">
+          <div class="col-md-5 col-xl-4">
+            <img class="col-12 rounded-responsive img-fluid" src="..." alt="...">
+          </div>
+          <div class="col-md-7 col-xl-8 d-flex align-items-center">
+            <div class="card-body">
+              <h3 class="card-title placeholder-glow fs-2">
+                <span class="placeholder col-6"></span>
+              </h3>
+              <p class="card-text d-flex flex-column gap-1">
+                <span class="placeholder col-7"></span>
+                <span class="placeholder col-3"></span>
+                <span class="placeholder col-5"></span>
+              </p>
+              <a href="places/<%#= place.title %>" class="card-link disabled placeholder col-4 btn btn-primary mt-lg-4"></a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+  
+      <% } %>
+  
+      <% 
+        // Membuat query params string dengan page dinamis
+        const makePageLink = (pageNum) => {
+          const params = new URLSearchParams();
+          params.set('page', pageNum);
+          if (orderSort) params.set('order', orderSort);
+          if (ratingSort) params.set('rating', ratingSort);
+          return '?' + params.toString();
+        }
+      %>
+      
+      <nav aria-label="Page navigation mt-5" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link <%= currentPage <= 1 ? 'disabled' : '' %>" href="<%= makePageLink(currentPage - 1) %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+              <a class="page-link" href="<%= makePageLink(i) %>"><%= i %></a>
+            </li>
+          <% } %>
+          <li class="page-item">
+            <a class="page-link <%= currentPage >= totalPages ? 'disabled' : '' %>" href="<%= makePageLink(currentPage + 1) %>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+  </ul>
+<% } %>
 
-<div class="d-flex justify-content-center mt-4">
-  <a href="/places/create" class="btn btn-outline-primary text-center d-flex align-items-center gap-2 px-4">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-    </svg>
-    Add Place
-  </a>
-</div>
 
 <style>
   .rounded-responsive {
@@ -110,7 +195,34 @@
     }
 
     .custom-object {
-      height: 250px;
+      height: 220px;
+    }
+  }
+
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) { 
+    .custom-object {
+      height: 275px;
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll('input[name="rating"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('rating', this.value);
+      url.searchParams.set('page', 1); // reset ke halaman 1
+      window.location.href = url.toString();
+    });
+  });
+
+  document.querySelectorAll('input[name="order"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('order', this.value);
+      url.searchParams.set('page', 1);
+      window.location.href = url.toString();
+    });
+  });
+</script>

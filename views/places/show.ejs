@@ -29,7 +29,7 @@
               <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                 <img src="/images/places/<%= image.filename %>" class="card-img-top w-100" alt="<%= image.title %>">
                 <figcaption class="carousel-caption d-none d-md-block">
-                  Photo of <%= place.title %>
+                  Photo of <%= place.title %> (<%= index + 1 %>)
                 </figcaption>
               </div>
             <% }) %>
@@ -198,118 +198,125 @@
     <% } %>
 
     <hr/>
-    <div class="d-flex flex-row justify-content-center align-items-center gap-2 mb-3">
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <div class="text-muted">Sorting order:</div>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Order sort group">
-          <input type="radio" class="btn-check" name="btnradioOrder" id="btnradio1" autocomplete="off" checked>
-          <label class="btn btn-outline-primary" for="btnradio1">Newest</label>
-    
-          <input type="radio" class="btn-check" name="btnradioOrder" id="btnradio2" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio2">Oldest</label>
-        </div>
-      </div>
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <div class="text-muted">Sorting rating:</div>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Rating sort button group">
-          <input type="radio" class="btn-check" name="btnradioRating" id="btnradio3" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio3">Highest</label>
-    
-          <input type="radio" class="btn-check" name="btnradioRating" id="btnradio4" autocomplete="off" checked>
-          <label class="btn btn-outline-primary" for="btnradio4">None</label>
 
-          <input type="radio" class="btn-check" name="btnradioRating" id="btnradio5" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio5">Lowest</label>
+    <% if (place.reviews.length === 0) { %>
+      <div class="mt-5 text-center fw-bold">
+        No reviews?🥺
+      </div>
+    <% } else { %>
+      <div class="d-flex flex-row justify-content-center align-items-center gap-2 mb-3">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="text-muted">Sorting by order:</div>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Order sort group">
+            <input type="radio" class="btn-check" name="order" id="orderDesc" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="orderDesc">Newest</label>
+        
+            <input type="radio" class="btn-check" name="order" id="orderAsc" autocomplete="off">
+            <label class="btn btn-outline-primary" for="orderAsc">Oldest</label>
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="text-muted">Sorting by rating:</div>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Rating sort button group">
+            <input type="radio" class="btn-check" name="rating" id="ratingAsc" autocomplete="off">
+            <label class="btn btn-outline-primary" for="ratingAsc">Highest</label>
+        
+            <input type="radio" class="btn-check" name="rating" id="ratingNone" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="ratingNone">None</label>
+    
+            <input type="radio" class="btn-check" name="rating" id="ratingDesc" autocomplete="off">
+            <label class="btn btn-outline-primary" for="ratingDesc">Lowest</label>
+          </div>
         </div>
       </div>
-    </div>
     
-    <div id="reviewsContainer">
-      <% for(const review of place.reviews) { %>
-        <div class="mt-3" data-timestamp="<%= +new Date(review.createdAt) %>">
-          <h5 class="d-flex align-items-center gap-3 fs-6">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-            </svg>
-            <div class="d-flex flex-row align-items-center justify-content-between w-100">
-    
-              <span class="d-flex flex-column">
-                <%= review.author.username %>
-                <small class="text-muted">Reviewed at: <%= new Date(review.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></small>
-              </span>
+      <div id="reviewsContainer">
+        <% for(const review of place.reviews) { %>
+          <div class="mt-4" data-timestamp="<%= +new Date(review.createdAt) %>">
+            <h5 class="d-flex align-items-center gap-3 fs-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+              </svg>
+              <div class="d-flex flex-row align-items-center justify-content-between w-100">
+
+                <span class="d-flex flex-column">
+                  <%= review.author.username %>
+                  <small class="text-muted"><%= new Date(review.createdAt).toLocaleString( 'en-US', { minute:'2-digit', hour:'2-digit', day: '2-digit', month: 'long', year: 'numeric' }) %></small>
+                </span>
           
-              <span>
-                <% if(currentUser && review.author.equals(currentUser._id)) { %>
-    
-                  <button 
-                    type="button" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#reviewDeleteConfirmationModal<%= review._id %>" 
+                <span>
+                  <% if(currentUser && review.author.equals(currentUser._id)) { %>
+
+                    <button 
+                      type="button" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#reviewDeleteConfirmationModal<%= review._id %>" 
                     class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                    </svg>
-                  </button>
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                      </svg>
+                    </button>
     
-                  <!-- Modal -->
-                  <div 
-                    class="modal fade" 
-                    id="reviewDeleteConfirmationModal<%= review._id %>" 
-                    data-bs-backdrop="static" 
-                    data-bs-keyboard="false" 
-                    tabindex="-1" 
-                    aria-labelledby="staticBackdropLabel<%= review._id %>" 
-                    aria-hidden="true"
-                  >
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="staticBackdropLabel<%= review._id %>">
-                            Delete Confirmation
-                          </h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          Are you sure you want to delete this review? This action cannot be undone.
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
-                          <form action="/places/<%= place.title %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="w-25">
-                            <button type="submit" class="btn btn-danger w-100 d-flex gap-2 align-items-center justify-content-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                              </svg>
-                              Delete
-                            </button>
-                          </form>
+                    <!-- Modal -->
+                    <div 
+                      class="modal fade" 
+                      id="reviewDeleteConfirmationModal<%= review._id %>" 
+                      data-bs-backdrop="static" 
+                      data-bs-keyboard="false" 
+                      tabindex="-1" 
+                      aria-labelledby="staticBackdropLabel<%= review._id %>" 
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel<%= review._id %>">
+                              Delete Confirmation
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to delete this review? This action cannot be undone.
+                          </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+                            <form action="/places/<%= place.title %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="w-25">
+                              <button type="submit" class="btn btn-danger w-100 d-flex gap-2 align-items-center justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                </svg>
+                                Delete
+                              </button>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
     
-                <% } %>
-              </span>
+                  <% } %>
+                </span>
           
-            </div>
-          </h5>
-    
-            <div class="card mb-3 <%= (currentUser && review.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
-              <div class="card-body">
-                <div class="d-flex align-items-center gap-1 mb-3">
-                  <span class="text-muted">Rated: </span>
-                  <span class="stars starability-result" data-rating="<%= review.rating %>">
-                    <!-- <%= review.rating %> -->
-                  </span>
-                </div>
-                <p class="card-text"><%= review.body %></p>
               </div>
-            </div>
-        </div>
+            </h5>
+    
+              <div class="card mb-3 <%= (currentUser && review.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-1 mb-3">
+                    <span class="text-muted">Rated: </span>
+                    <span class="stars starability-result" data-rating="<%= review.rating %>">
+                      <!-- <%= review.rating %> -->
+                    </span>
+                  </div>
+                  <p class="card-text"><%= review.body %></p>
+                </div>
+              </div>
+          </div>
   
+        <% } %>
       <% } %>
     </div>
     
@@ -335,28 +342,28 @@
     const url = new URL(window.location.href);
 
     // Sorting order
-    document.getElementById('btnradio1').addEventListener('change', () => {
+    document.getElementById('orderDesc').addEventListener('change', () => {
       url.searchParams.set('order', 'desc'); // newest
       window.location.href = url.toString();
     });
 
-    document.getElementById('btnradio2').addEventListener('change', () => {
+    document.getElementById('orderAsc').addEventListener('change', () => {
       url.searchParams.set('order', 'asc'); // oldest
       window.location.href = url.toString();
     });
 
     // Sorting rating
-    document.getElementById('btnradio3').addEventListener('change', () => {
+    document.getElementById('ratingAsc').addEventListener('change', () => {
       url.searchParams.set('rating', 'desc'); // highest
       window.location.href = url.toString();
     });
 
-    document.getElementById('btnradio4').addEventListener('change', () => {
+    document.getElementById('ratingNone').addEventListener('change', () => {
       url.searchParams.delete('rating'); // none
       window.location.href = url.toString();
     });
 
-    document.getElementById('btnradio5').addEventListener('change', () => {
+    document.getElementById('ratingDesc').addEventListener('change', () => {
       url.searchParams.set('rating', 'asc'); // lowest
       window.location.href = url.toString();
     });
@@ -366,17 +373,17 @@
     const ratingParam = url.searchParams.get('rating');
 
     if (orderParam === 'asc') {
-      document.getElementById('btnradio2').checked = true;
+      document.getElementById('orderAsc').checked = true;
     } else {
-      document.getElementById('btnradio1').checked = true;
+      document.getElementById('orderDesc').checked = true;
     }
 
     if (ratingParam === 'desc') {
-      document.getElementById('btnradio3').checked = true;
+      document.getElementById('ratingAsc').checked = true;
     } else if (ratingParam === 'asc') {
-      document.getElementById('btnradio5').checked = true;
+      document.getElementById('ratingDesc').checked = true;
     } else {
-      document.getElementById('btnradio4').checked = true;
+      document.getElementById('ratingNone').checked = true;
     }
   });
 </script>
@@ -391,7 +398,7 @@
 
     let overview = '';
     if (rating >= 5) {
-      overview = 'True BestPoint';
+      overview = 'True BestPoint!';
     } else if (rating >= 4.5) {
       overview = 'What a Great Place';
     } else if (rating >= 4.0) {

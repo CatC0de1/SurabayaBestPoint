@@ -8,7 +8,29 @@ const { getWIBDate } = require('../utils/wibDate');
 const { getPlaceStatus } = require('../utils/wibDate');
 
 module.exports.index = async (req, res) => {
-  const places = await Place.find();
+  const page = parseInt(req.query.page) || 1;
+  const ratingSort = req.query.rating || 'none';
+  const orderSort = req.query.order || 'desc';
+
+
+  const limit = 5;
+  const skip = (page - 1) * limit;
+
+  let sortOption = {};
+  
+  // Sorting rating
+  if (ratingSort === 'asc') sortOption.rating = 1;
+  else if (ratingSort === 'desc') sortOption.rating = -1;
+  
+  // Sorting by createdAt (terbaru/terlama)
+  if (orderSort) sortOption.createdAt = orderSort === 'asc' ? 1 : -1;
+
+  const places = await Place.find()
+    .sort(sortOption)
+    .skip(skip)
+    .limit(limit);
+    
+  const total = await Place.countDocuments();
 
   // Menambahkan status isNew pada setiap tempat
   const placeWithStatus = places.map(place => {
@@ -17,7 +39,13 @@ module.exports.index = async (req, res) => {
     return plain;
   })
 
-  res.render('places/index', { places: placeWithStatus });
+  res.render('places/index', { 
+    places: placeWithStatus,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+    ratingSort,
+    orderSort
+  });
 }
 
 module.exports.store = async (req, res, next) => {
