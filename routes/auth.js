@@ -27,7 +27,7 @@ router.route('/register')
 router.route('/login')
   .get(AuthController.loginForm)
   .post(
-    recaptcha,
+    // recaptcha,
     passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: {

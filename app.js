@@ -99,6 +99,7 @@ app.get('/', (req, res) => {
 app.use('/', require('./routes/auth'));
 app.use('/places', require('./routes/places'));
 app.use('/places/:title/reviews', require('./routes/reviews'));
+app.use('/account', require('./routes/account'))
 
 // app.get('/set-session', (req, res) => {
 //   req.session.username = "test_user"; // Menyimpan data ke session

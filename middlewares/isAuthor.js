@@ -1,5 +1,6 @@
 const Place = require('../models/place');
 const Review = require('../models/review');
+const User = require('../models/user');
 
 module.exports.isAuthorPlace = async (req, res, next) => {
   const { title } = req.params;
@@ -20,6 +21,15 @@ module.exports.isAuthorReview = async (req, res, next) => {
   if (!review.author.equals(req.user._id)) {
     req.flash('error_msg', 'You are not authorized to do that!');
     return res.redirect(`/places/${title}`);
+  }
+
+  next();
+}
+
+module.exports.isAccountOwner = (req, res, next) => {
+  if (!req.user || req.user._id.toString() !== req.params.id) {
+    req.flash('error_msg', 'You are not authorized to do that!');
+    return res.redirect(`/account/${req.params.id}`)
   }
 
   next();

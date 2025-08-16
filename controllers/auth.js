@@ -20,7 +20,7 @@ module.exports.register = async (req, res, next) => {
     req.login(registerUser, err => {
       if (err) return next(err);
       req.flash('success_msg', 'You are registered and logged in!');
-      res.redirect('/places');
+      res.redirect('/account');
     })
   } catch (error) {
     let msg;
@@ -49,7 +49,7 @@ module.exports.loginForm = (req, res) => {
 
 module.exports.login = (req, res) => {
   req.flash('success_msg', 'Logged in successfully!');
-  res.redirect('/places');
+  res.redirect('/account');
 }
 
 module.exports.logout = (req, res) => {
