@@ -51,7 +51,7 @@
 
       <% } else { %>
         <img src="/images/places/placeholder.jpg" class="card-img-top figure-image w-100" alt="No image available for <%= place.title %>">
-        <figcaption class="figure-caption text-end d-none d-md-block">
+        <figcaption class="figure-caption me-5 text-end d-none d-md-block">
           No image available for <%= place.title %>
         </figcaption>
       <% } %>
@@ -90,9 +90,20 @@
           <hr/>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">Author: <%= place.author.username %></li>
-          <li class="list-group-item">Created at: <%= new Date(place.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></li>
-          <li class="list-group-item">Updated at: <%= new Date(place.updatedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %></li>
+          <li class="list-group-item">
+            Author: 
+            <a href="/account/<%= place.author._id %>" class="text-decoration-none font-primary">
+              @<%= place.author.username %>
+            </a>
+          </li>
+          <li class="list-group-item">
+            Created at: 
+            <%= new Date(place.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %>
+          </li>
+          <li class="list-group-item">
+            Updated at: 
+            <%= new Date(place.updatedAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) %>
+          </li>
         </ul>
       </div>
     
@@ -233,16 +244,13 @@
       <div id="reviewsContainer">
         <% for(const review of place.reviews) { %>
           <div class="mt-4" data-timestamp="<%= +new Date(review.createdAt) %>">
-            <h5 class="d-flex align-items-center gap-3 fs-6">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-              </svg>
+            <h5 class="d-flex align-items-center gap-2 fs-6">
+              <img style="width: 45px;" class="custom-profil border rounded-circle" src="/images/profiles/<%= (!review.author.profil) ? 'placeholder.jpg' : 'placeholder.jpg' %>" alt="Profile Picture of <%= review.author.username %>">             
               <div class="d-flex flex-row align-items-center justify-content-between w-100">
 
                 <span class="d-flex flex-column">
                   <span class="d-flex flex-row align-items-center gap-1">
-                    <span>@<%= review.author.username %></span>
+                    <a href="/account/<%= review.author._id %>" class="text-decoration-none font-primary">@<%= review.author.username %></a>
                     <small class="badge rounded-pill text-bg-primary <%= review.author.equals(place.author) ? 'd-block' : 'd-none' %>">Author</small>
                   </span>
                   <small class="text-muted"><%= new Date(review.createdAt).toLocaleString( 'en-US', { minute:'2-digit', hour:'2-digit', day: '2-digit', month: 'long', year: 'numeric' }) %></small>

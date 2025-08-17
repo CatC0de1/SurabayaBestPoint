@@ -20,7 +20,7 @@ router.route('/register')
     //   console.log('REQ BODY:', req.body);
     //   next();
     // },
-    recaptcha,
+    // recaptcha,
     validateUser,
     wrapAsync(AuthController.register));
 

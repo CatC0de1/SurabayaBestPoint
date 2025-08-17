@@ -1,4 +1,3 @@
-// ./routes/account.js
 const express = require('express');
 const router = express.Router();
 
@@ -22,8 +21,9 @@ router.get('/', isAuth,
 );
 
 router.route('/:id')
-  .get(wrapAsync(AccountController.show))
-  .patch(isAuth, isAccountOwner, wrapAsync(AccountController.update))
-  .delete(isAuth, isAccountOwner, wrapAsync(AccountController.destroy))
+  .get(isValidObjectId('/account'), wrapAsync(AccountController.show))
+  .delete(isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.destroy))
+
+router.patch('/:id/username', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateUsername));
 
 module.exports = router;

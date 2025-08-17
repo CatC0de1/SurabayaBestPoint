@@ -5,9 +5,60 @@
 <% } %>
 
 <div class="card col-10 offset-1 col-lg-8 offset-lg-2 <%= (currentUser && user._id.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
+  
+  <% if (currentUser && user._id.equals(currentUser._id)) { %>
+    <div class="position-absolute top-0 end-0">
+      <button class="btn btn-secondary dropdown-toggle d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+          <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+          <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+        </svg>
+      </button>
+      <ul class="dropdown-menu border border-secondary">
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editUsernamaModal">Change username</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editEmailModal">Change email</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editFullnameModal"><%= (!user.profil) ? 'Add ' : 'Change ' %>photo profile</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editFullnameModal"><%= (!user.fullName) ? 'Add ' : 'Change ' %>full name</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editDescriptionModal"><%= (!user.description) ? 'Add ' : 'Change ' %>description</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editContactModal" class="border-0 w-100"><%= (!user.address || !user.instagram || !user.twitter || !user.facebook) ? 'Add ' : 'Change ' %>Contact</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editPasswordModal">Change password</button></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteAccountConfirmation">Delete account</button></li>
+      </ul>
+    </div>
+
+    <!-- Modal username -->
+    <div class="modal fade" id="editUsernamaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Username</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="validated-form" id="editUsername" action="/account/<%= user._id %>/username?_method=PATCH" method="POST">
+              <label for="username" class="mb-2">Type your new username</label>
+              <input type="text" class="form-control" name="username" id="username" placeholder="your_username" value="<%= user.username %>" required>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editUsername" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% } %>
+  
   <div class="card-body d-flex flex-column gap-2">
     <div class="card-header d-flex flex-row gap-2 gap-md-3 gap-xl-4 mb-1 align-items-center">
-      <img class="w-25 border rounded-circle" src="/images/profiles/<%= (!user.profil) ? 'placeholder.jpg' : 'placeholder.jpg' %>" alt="Profile Picture of <%= user.username %>">
+      <img class="custom-profil w-25 border rounded-circle" src="/images/profiles/<%= (!user.profil) ? 'placeholder.jpg' : 'placeholder.jpg' %>" alt="Profile Picture of <%= user.username %>">
       <div>
         <h1>@<%= user.username %></h1>
         <span><%= (!user.fullname) ? '' : user.fullName %></span>
@@ -22,9 +73,6 @@
         <li>
           <span class="text-muted">Gender:</span>
           <span><%= user.gender %></span>
-        </li>
-        <li>
-          <span class="text-muted">Full name:</span>
         </li>
       </ul>
       <div>
@@ -68,3 +116,73 @@ admin = http://127.0.0.1:3000/account/689c514bd4dfb8f0b7bc9bd2
 user = http://127.0.0.1:3000/account/689cc5771b0f02c66e3b4a00
 
 -->
+
+<script>
+  const formUsername = document.getElementById('editUsername');
+  const formPassword = document.getElementById('editPassword');
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+  const passwordConfirmation = document.getElementById('passwordConfirmation');
+
+  function isUsernameValid(username) {
+    const minLength = 3;
+    const usernamePattern = /^[a-z0-9_]+$/;
+    return (
+      username.length >= minLength &&
+      usernamePattern.test(username)
+    );
+  }
+
+  function isPasswordValid(pwd) {
+    const minLength = 6;
+    const hasLetter = /[a-zA-Z]/.test(pwd);
+    const hasNumber = /[0-9]/.test(pwd);
+    return minLength && hasLetter && hasNumber;
+  }
+
+  formUsername.addEventListener('submit', function(event) {
+    let valid = true;
+
+    if (!isUsernameValid(username.value)) {
+      event.preventDefault();
+      username.setCustomValidity('Username must be at least 3 characters long, contain only lowercase letters, numbers, and underscores');
+      username.reportValidity();
+      valid = false;
+    } else {
+      username.setCustomValidity('');
+    }
+
+    if (!valid) return;
+  });
+
+  username.addEventListener('input', function() { username.setCustomValidity(''); });
+  
+
+  formPassword.addEventListener('submit', function(event) {
+    let valid = true;
+    
+    if (!isPasswordValid(password.value)) {
+      event.preventDefault();
+      password.setCustomValidity('Password must be at least 6 characters long, contain letters and numbers');
+      password.reportValidity();
+      valid = false;
+    } else {
+      password.setCustomValidity('');
+    }
+
+    if (password.value !== passwordConfirmation.value) {
+      event.preventDefault();
+      passwordConfirmation.setCustomValidity('Passwords do not match');
+      passwordConfirmation.reportValidity();
+      valid = false;
+    } else {
+      passwordConfirmation.setCustomValidity('');
+    }
+
+    if (!valid) return;
+  });
+
+  password.addEventListener('input', function() { password.setCustomValidity(''); });
+  passwordConfirmation.addEventListener('input', function() { passwordConfirmation.setCustomValidity(''); });
+
+</script>

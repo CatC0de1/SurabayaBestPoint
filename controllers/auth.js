@@ -17,16 +17,16 @@ module.exports.register = async (req, res, next) => {
     const user = new User({ email, username, gender, birthday, createdAt });
     const registerUser = await User.register(user, password);
 
-    req.login(registerUser, err => {
-      if (err) return next(err);
+    req.login(registerUser, error => {
+      if (error) return next(error);
       req.flash('success_msg', 'You are registered and logged in!');
-      res.redirect('/account');
+      res.redirect(`/account/${req.user._id}`);
     })
   } catch (error) {
     let msg;
 
     // cek duplikat pada passport-local-mongoose dan mongoDB
-    if (error.name === 'UserExistsError' || error.code === 11000 && error.keyPattern?.title) {
+    if (error.name === 'UserExistsError' || error.code === 11000 && error.keyPattern?.username) {
       msg = 'This username already taken';
     } else if (error.code === 11000 && error.keyPattern?.email) {
       msg = 'This email already exists';
@@ -49,7 +49,7 @@ module.exports.loginForm = (req, res) => {
 
 module.exports.login = (req, res) => {
   req.flash('success_msg', 'Logged in successfully!');
-  res.redirect('/account');
+  res.redirect(`/account/${req.user._id}`);
 }
 
 module.exports.logout = (req, res) => {

@@ -3,6 +3,11 @@
   height: 70px;
 }
 
+.custom-profil {
+  object-fit: cover; 
+  object-position: center;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {  }
 

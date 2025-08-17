@@ -30,7 +30,7 @@ async function connectDB() {
         console.log(err)
     });
   } catch (error) {
-    console.log(err);
+    console.log(error);
   }
 }
 
