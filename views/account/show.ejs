@@ -17,7 +17,7 @@
       <ul class="dropdown-menu border border-secondary">
         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editUsernamaModal">Change username</button></li>
         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editEmailModal">Change email</button></li>
-        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editFullnameModal"><%= (!user.profil) ? 'Add ' : 'Change ' %>photo profile</button></li>
+        <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editProfilModal"><%= (!user.profil) ? 'Add ' : 'Change ' %>photo profile</button></li>
         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editFullnameModal"><%= (!user.fullName) ? 'Add ' : 'Change ' %>full name</button></li>
         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editDescriptionModal"><%= (!user.description) ? 'Add ' : 'Change ' %>description</button></li>
         <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editContactModal" class="border-0 w-100"><%= (!user.address || !user.instagram || !user.twitter || !user.facebook) ? 'Add ' : 'Change ' %>Contact</button></li>
@@ -54,6 +54,95 @@
       </div>
     </div>
 
+    <!-- Modal email -->
+    <div class="modal fade" id="editEmailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Email</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="validated-form" id="editEmail" action="/account/<%= user._id %>/email?_method=PATCH" method="POST">
+              <label for="email" class="mb-2">Type your new email</label>
+              <input type="email" class="form-control" name="email" id="email" placeholder="example@mail.com" value="<%= user.email %>" required>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editEmail" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal fullname -->
+    <div class="modal fade" id="editFullnameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              <%= (!user.fullName) ? 'Add Full Name' : 'Change Full Name' %>
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="validated-form" id="editFullname" action="/account/<%= user._id %>/fullname?_method=PATCH" method="POST">
+              <label for="fullname" class="mb-2">
+                <%= (!user.fullName) ? 'Add your full name' : 'Type your new full name' %>
+              </label>
+              <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Your Full Name" value="<%= user.fullName %>" required>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editFullname" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal description -->
+    <div class="modal fade" id="editDescriptionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              <%= (!user.description) ? 'Add Description' : 'Change Description' %>
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="validated-form" id="editDescription" action="/account/<%= user._id %>/description?_method=PATCH" method="POST">
+              <label for="description" class="mb-2">
+                Describe more about you
+              </label>
+              <textarea type="text" class="form-control" name="description" id="description" placeholder="Your Description" rows="5" required><%= (user.description) ? user.description : '' %></textarea>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editDescription" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <% } %>
   
   <div class="card-body d-flex flex-column gap-2">
@@ -61,7 +150,7 @@
       <img class="custom-profil w-25 border rounded-circle" src="/images/profiles/<%= (!user.profil) ? 'placeholder.jpg' : 'placeholder.jpg' %>" alt="Profile Picture of <%= user.username %>">
       <div>
         <h1>@<%= user.username %></h1>
-        <span><%= (!user.fullname) ? '' : user.fullName %></span>
+        <span><%= (!user.fullName) ? '' : user.fullName %></span>
       </div>
     </div>
     <div class="d-flex flex-column gap-2">
@@ -77,9 +166,7 @@
       </ul>
       <div>
         <span>About me:</span>
-        <p class="border bg-white rounded p-2">
-          <%= (!user.description) ? '-' : user.description %>
-        </p>
+        <p class="border bg-white rounded p-2" style="white-space: pre-wrap; text-align: justify;"><%= (!user.description) ? '-' : user.description %></p>
       </div>
     </div>
     <div>
@@ -91,15 +178,15 @@
         </li>
         <li>
           <span class="text-muted">Instagram:</span>
-          <span><%= (!user.Instagram) ? ' - ' : user.Instagram %></span>
+          <a href="<%= user.instagram %>" class="text-decoration-none text-primary"><%= (!user.Instagram) ? ' - ' : user.Instagram %></a>
         </li>
         <li>
           <span class="text-muted">twitter:</span>
-          <span><%= (!user.twitter) ? ' - ' : user.twitter %></span>
+          <a href="<%= user.twitter %>" class="text-decoration-none text-primary"><%= (!user.twitter) ? ' - ' : user.twitter %></a>
         </li>
         <li>
           <span class="text-muted">facebook:</span>
-          <span><%= (!user.facebook) ? ' - ' : user.facebook %></span>
+          <a href="<%= user.facebook %>" class="text-decoration-none text-primary"><%= (!user.facebook) ? ' - ' : user.facebook %></a>
         </li>
       </ul>
     </div>
@@ -119,8 +206,10 @@ user = http://127.0.0.1:3000/account/689cc5771b0f02c66e3b4a00
 
 <script>
   const formUsername = document.getElementById('editUsername');
+  const formFullname = document.getElementById('editFullname');
   const formPassword = document.getElementById('editPassword');
   const username = document.getElementById('username');
+  const fullname = document.getElementById('fullname');
   const password = document.getElementById('password');
   const passwordConfirmation = document.getElementById('passwordConfirmation');
 
@@ -131,6 +220,11 @@ user = http://127.0.0.1:3000/account/689cc5771b0f02c66e3b4a00
       username.length >= minLength &&
       usernamePattern.test(username)
     );
+  }
+
+  function isFullnameValid(fullname) {
+    const fullnamePattern = /^[A-Za-z\s]+$/;
+    return fullnamePattern.test(fullname);
   }
 
   function isPasswordValid(pwd) {
@@ -154,9 +248,23 @@ user = http://127.0.0.1:3000/account/689cc5771b0f02c66e3b4a00
 
     if (!valid) return;
   });
-
   username.addEventListener('input', function() { username.setCustomValidity(''); });
   
+  formFullname.addEventListener('submit', function(event) {
+    let valid = true;
+
+    if (!isFullnameValid(fullname.value)) {
+      event.preventDefault();
+      fullname.setCustomValidity('Full name only contain alpabet');
+      fullname.reportValidity();
+      valid = false;
+    } else {
+      fullname.setCustomValidity('');
+    }
+
+    if (!valid) return;
+  });
+  fullname.addEventListener('input', function() { fullname.setCustomValidity(''); });
 
   formPassword.addEventListener('submit', function(event) {
     let valid = true;
@@ -181,7 +289,6 @@ user = http://127.0.0.1:3000/account/689cc5771b0f02c66e3b4a00
 
     if (!valid) return;
   });
-
   password.addEventListener('input', function() { password.setCustomValidity(''); });
   passwordConfirmation.addEventListener('input', function() { passwordConfirmation.setCustomValidity(''); });
 

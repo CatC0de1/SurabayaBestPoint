@@ -15,7 +15,8 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: [/^\S+@\S+\.\S+$/, 'Email address is not valid!']
   },
   birthday: {
     type: Date,
@@ -30,7 +31,8 @@ const userSchema = new Schema({
     type: String
   },
   fullName: {
-    type: String
+    type: String,
+    match: [/^[A-Za-z\s]+$/, 'Full name only contain alpabet!']
   },
   address: {
     type: String
