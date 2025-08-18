@@ -11,7 +11,7 @@ require('dotenv').config();
 // const cookieParser = require('cookie-parser'); // alternatif untuk menampilkan cookie
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 const User = require('./models/user');
 
