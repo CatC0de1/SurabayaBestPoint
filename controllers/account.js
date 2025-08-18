@@ -237,7 +237,7 @@ module.exports.destroyImage = async (req, res, next) => {
     const { id } = req.params;
     
     const user = await User.findById(id);
-    if (!user) return next(new ErrorHandler('User not found', 404));
+    if (!user) return next(new ExpressError('User not found', 404));
 
     if (user.profil && user.profil.url) {
       const imagePath = path.join(__dirname, '../public', user.profil.url);
@@ -266,7 +266,7 @@ module.exports.destroy = async (req, res, next) => {
     const { id } = req.params;
 
     const user = await User.findById(id);
-    if (!user) return next(new ErrorHandler('User not found', 404));
+    if (!user) return next(new ExpressError('User not found', 404));
 
     // hapus profil kalau ada
     if (user.profil && user.profil.url) {
@@ -291,6 +291,6 @@ module.exports.destroy = async (req, res, next) => {
     }
 
   } catch (error) {
-    return next(new ErrorHandler('Failed to delete account!', 500));
+    return next(new ExpressError('Failed to delete account!', 500));
   }
 }
