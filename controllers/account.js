@@ -1,6 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 const User = require('../models/user');
 const ExpressError = require('../utils/ErrorHandler');
-
 
 module.exports.show = async (req, res, next) => {
   const user = await User.findById(req.params.id);
@@ -82,7 +83,70 @@ module.exports.updateEmail = async (req, res, next) => {
   }
 }
 
-module.exports.updateProfil = async (req, res, next) => {}
+module.exports.updateProfil = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const files = req.files || [];
+
+    if (!files.length) {
+      req.flash('"image" cannot empty!');
+      return res.redirect(`/account/${id}`);
+    }
+    if (files.length > 1) {
+      req.flash('"image" only contain 1 file!');
+      return res.redirect(`/account/${id}`);
+    }
+
+    const file = files[0];
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      const msg = '"image" only accept .jpeg, .jpg, .png, or .webp format';
+      if (req.headers.accept && req.headers.accept.includes('text/html')) {
+        req.flash('error_msg', msg);
+        return res.redirect(req.originalUrl);
+      } else {
+        return next(new ExpressError(msg, 400))
+      }
+    }
+    
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      const msg = '"image" size must be less than 5MB';
+      if (req.headers.accept && req.headers.accept.includes('text/html')) {
+        req.flash('error_msg', msg);
+        return res.redirect(req.originalUrl);
+      } else {
+        return next(new ExpressError(msg, 400))
+      }
+    }
+
+    const user = await User.findById(id);
+    if (!user) return next(new ExpressError('User not found!', 404));
+
+    // Menghapus foto lama jika ada
+    if (user.profil && user.profil.url) {
+      try {
+        const oldPath = path.join(__dirname, '../public', user.profil.url);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      } catch (error) {
+        return next(new ExpressError(error, 500));
+      }
+    }
+
+    user.profil = {
+      url: `/images/profiles/${file.filename}`,
+      filename: file.filename
+    };
+
+    await user.save();
+  
+    req.flash('success_msg', 'Update profile picture succesfully!');
+    res.redirect(`/account/${id}`);
+  } catch (error) {
+    return next(new ExpressError('Update email failed!', 500));
+  }  
+}
 
 module.exports.updateFullname = async (req, res, next) => {
     try {
@@ -165,6 +229,35 @@ module.exports.updatePassword = async (req, res, next) => {
     })
   } catch (error) {
     return next(new ExpressError('Update password failed!', 500));
+  }
+}
+
+module.exports.destroyImage = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id);
+    if (!user) return next(new ErrorHandler('User not found', 404));
+
+    if (user.profil && user.profil.url) {
+      const imagePath = path.join(__dirname, '../public', user.profil.url);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+      user.profil = {
+        url: null,
+        filename: null
+      };
+    }
+
+    await user.save();
+
+
+    req.flash('success_msg', 'Photo Profile deleted successfully!');
+    return res.redirect(`/account/${user._id}`);
+  } catch (error) {
+    req.flash('error_msg', error);
+    return res.redirect(`/account/${user._id}`);
   }
 }
 

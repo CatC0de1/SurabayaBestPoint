@@ -241,7 +241,9 @@
         <% for(const review of place.reviews) { %>
           <div class="mt-4" data-timestamp="<%= +new Date(review.createdAt) %>">
             <h5 class="d-flex align-items-center gap-2 fs-6">
-              <img style="width: 45px;" class="custom-profil border rounded-circle" src="/images/profiles/<%= (!review.author.profil) ? 'placeholder.jpg' : 'placeholder.jpg' %>" alt="Profile Picture of <%= review.author.username %>">             
+              <div>
+                <img class="custom-profil custom-object border rounded-circle" src="<%= (!review.author.profil.url) ? '/images/profiles/placeholder.jpg' : review.author.profil.url %>" alt="Profile Picture of <%= review.author.username %>">             
+              </div>
               <div class="d-flex flex-row align-items-center justify-content-between w-100">
 
                 <span class="d-flex flex-column">
@@ -314,9 +316,7 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center gap-1 mb-3">
                     <span class="text-muted">Rated: </span>
-                    <span class="stars starability-result" data-rating="<%= review.rating %>">
-                      <!-- <%= review.rating %> -->
-                    </span>
+                    <span class="stars starability-result" data-rating="<%= review.rating %>"></span>
                   </div>
                   <p class="card-text"><%= review.body %></p>
                 </div>
@@ -341,6 +341,11 @@
   }
   #placeRating {
     transform: scale(0.75);
+  }
+
+  .custom-object {
+    height: 45px;
+    width: 45px;
   }
 </style>
 

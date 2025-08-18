@@ -2,28 +2,40 @@ const multer = require('multer');
 const path = require('path');
 
 // utils
-const ErrorHandler = require('../utils/ErrorHandler');
+const ExpressError = require('../utils/ErrorHandler');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../public/images/places'));
-  },
+function upload(directory) {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      let dir;
 
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+      if (directory === 'places') {
+        dir = path.join(__dirname, '../public/images/places');
+      } else if (directory === 'profiles') {
+        dir = path.join(__dirname, '../public/images/profiles');
+      } else {
+        return cb(new ExpressError('Invalid upload directory!', 400));
+      }
 
-const upload = multer({ 
-  storage: storage,
-  fileFilter: function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) { 
-      cb(null, true);
-    } else {
-      cb(new ErrorHandler('Only images are allowed!', 405));
+      cb(null, dir)
+    },
+  
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
-  } 
-});
+  });
+
+  return multer({ 
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+      if (file.mimetype.startsWith('image/')) { 
+        cb(null, true);
+      } else {
+        cb(new ExpressError('Only images are allowed!', 405));
+      }
+    } 
+  });
+}
 
 module.exports = upload;

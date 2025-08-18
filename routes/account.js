@@ -12,6 +12,9 @@ const { isAccountOwner } = require('../middlewares/isAuthor');
 // controllers
 const AccountController = require('../controllers/account');
 
+// config
+const upload = require('../config/multer');
+
 
 // Jika sudah login, redirect ke /account/:id, jika belum login, otomatis diarahkan ke login oleh isAuth
 router.get('/', isAuth,
@@ -26,10 +29,12 @@ router.route('/:id')
 
 router.patch('/:id/username', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateUsername));
 router.patch('/:id/email', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateEmail));
-router.patch('/:id/profil', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateProfil));
+router.patch('/:id/profil', isAuth, isAccountOwner, isValidObjectId('/account'), upload('profiles').array('image', 1), wrapAsync(AccountController.updateProfil));
 router.patch('/:id/fullname', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateFullname));
 router.patch('/:id/description', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateDescription));
 router.patch('/:id/contact', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateContact));
 router.patch('/:id/password', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updatePassword));
+
+router.delete('/:id/profil', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.destroyImage));
 
 module.exports = router;

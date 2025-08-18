@@ -203,8 +203,8 @@ module.exports.destroyImage = async (req, res) => {
 
     req.flash('success_msg', 'Image deleted successfully!');
     return res.redirect(`/places/${title}/edit`);
-  } catch (err) {
-    req.flash('error_msg', 'Failed to delete image!');
+  } catch (error) {
+    req.flash('error_msg', error);
     return res.redirect(`/places/${title}/edit`);
   }
 }

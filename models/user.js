@@ -28,7 +28,8 @@ const userSchema = new Schema({
     required: true
   },
   profil: {
-    type: String
+    url: String,
+    filename: String
   },
   fullName: {
     type: String,

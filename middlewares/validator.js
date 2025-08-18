@@ -4,7 +4,7 @@ const { placeSchema } = require('../schemas/place');
 const { userSchema } = require('../schemas/user');
 
 //utils
-const ErrorHandler = require('../utils/ErrorHandler');
+const ExpressError = require('../utils/ErrorHandler');
 
 module.exports.validatePlace = (req, res, next) => {
   let messages = [];
@@ -46,7 +46,7 @@ module.exports.validatePlace = (req, res, next) => {
       }
     }
 
-    return next(new ErrorHandler(msg, 400));
+    return next(new ExpressError(msg, 400));
   }
 
   next();
@@ -63,7 +63,7 @@ module.exports.validateReview = (req, res, next) => {
       return res.redirect(req.originalUrl);
     }
     
-    return next(new ErrorHandler(msg, 400))
+    return next(new ExpressError(msg, 400))
   } else {
     next();
   }
@@ -85,7 +85,7 @@ module.exports.validateUser = (req, res, next) => {
       return res.redirect('/register')
     }
 
-    return next(new ErrorHandler(msg, 400))
+    return next(new ExpressError(msg, 400))
   } else {
     next();
   }
@@ -108,7 +108,7 @@ module.exports.validatePlaceImages = (req, res, next) => {
         req.flash('error_msg', msg);
         return res.redirect(req.originalUrl);
       } else {
-        return next(new ErrorHandler(msg, 400))
+        return next(new ExpressError(msg, 400))
       }
     }
   
@@ -118,7 +118,7 @@ module.exports.validatePlaceImages = (req, res, next) => {
         req.flash('error_msg', msg);
         return res.redirect(req.originalUrl);
       } else {
-        return next(new ErrorHandler(msg, 400))
+        return next(new ExpressError(msg, 400))
       }
     }
   }
