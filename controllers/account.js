@@ -262,10 +262,35 @@ module.exports.destroyImage = async (req, res, next) => {
 }
 
 module.exports.destroy = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  await User.findByIdAndDelete(id)
+    const user = await User.findById(id);
+    if (!user) return next(new ErrorHandler('User not found', 404));
 
-  req.flash('success_msg', 'User deleted successfully!');
-  res.redirect('/');
+    // hapus profil kalau ada
+    if (user.profil && user.profil.url) {
+      const imagePath = path.join(__dirname, '../public', user.profil.url);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // hapus user
+    await User.findByIdAndDelete(id);
+
+    if (req.user && req.user._id.toString() === id.toString()) {
+      req.logout(err => {
+        if (err) return next(err);
+        req.flash('success_msg', 'Your account has been deleted successfully!');
+        return res.redirect('/');
+      });
+    } else {
+      req.flash('success_msg', 'User deleted successfully!');
+      return res.redirect('/');
+    }
+
+  } catch (error) {
+    return next(new ErrorHandler('Failed to delete account!', 500));
+  }
 }

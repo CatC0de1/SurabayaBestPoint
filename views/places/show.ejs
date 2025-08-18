@@ -12,7 +12,7 @@
   <!-- Start of place card -->
 
   <div class="col-12 col-lg-8">
-    <div class="card mb-5 <%= (currentUser && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
+    <div class="card mb-5 <%= (currentUser && place.author && place.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
       
       <% if (place.images.length > 0) { %>
         <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -88,9 +88,15 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
             Author: 
-            <a href="/account/<%= place.author._id %>" class="text-decoration-none font-primary">
-              @<%= place.author.username %>
-            </a>
+            <% if (place.author === null) { %>
+              <small class="text-muted">
+                [Deleted User]
+              </small>
+              <% } else { %>
+                <a href="/account/<%= place.author._id %>" class="text-decoration-none font-primary">
+                  @<%= place.author.username %>
+                </a>
+            <% } %>
           </li>
           <li class="list-group-item">
             Created at: 
@@ -103,7 +109,7 @@
         </ul>
       </div>
     
-      <% if(currentUser && place.author.equals(currentUser._id)) { %>
+      <% if(currentUser && place.author && place.author.equals(currentUser._id)) { %>
       <div class="card-body d-flex gap-2">
         <a href="/places/<%= place.title %>/edit" class="btn card-link btn-outline-warning w-25 d-flex gap-2 align-items-center justify-content-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -242,20 +248,30 @@
           <div class="mt-4" data-timestamp="<%= +new Date(review.createdAt) %>">
             <h5 class="d-flex align-items-center gap-2 fs-6">
               <div>
-                <img class="custom-profil custom-object border rounded-circle" src="<%= (!review.author.profil.url) ? '/images/profiles/placeholder.jpg' : review.author.profil.url %>" alt="Profile Picture of <%= review.author.username %>">             
+                <% if (review.author === null) { %>
+                  <img class="custom-profil custom-object border rounded-circle" src="/images/profiles/placeholder.jpg" alt="Profile Picture of Deleted User">             
+                  <% } else { %>
+                  <img class="custom-profil custom-object border rounded-circle" src="<%= (!review.author.profil.url) ? '/images/profiles/placeholder.jpg' : review.author.profil.url %>" alt="Profile Picture of <%= review.author.username %>">             
+                <% } %>
               </div>
               <div class="d-flex flex-row align-items-center justify-content-between w-100">
 
                 <span class="d-flex flex-column">
                   <span class="d-flex flex-row align-items-center gap-1">
-                    <a href="/account/<%= review.author._id %>" class="text-decoration-none font-primary">@<%= review.author.username %></a>
-                    <small class="badge rounded-pill text-bg-primary <%= review.author.equals(place.author) ? 'd-block' : 'd-none' %>">Author</small>
+                    <% if (review.author === null) { %>
+                      <small>
+                        [Deleted User]
+                      </small>
+                      <% } else { %>
+                        <a href="/account/<%= review.author._id %>" class="text-decoration-none font-primary">@<%= review.author.username %></a>
+                        <small class="badge rounded-pill text-bg-primary <%= review.author.equals(place.author) ? 'd-block' : 'd-none' %>">Author</small>
+                    <% } %>
                   </span>
                   <small class="text-muted"><%= new Date(review.createdAt).toLocaleString( 'en-US', { minute:'2-digit', hour:'2-digit', day: '2-digit', month: 'long', year: 'numeric' }) %></small>
                 </span>
           
                 <span>
-                  <% if(currentUser && review.author.equals(currentUser._id)) { %>
+                  <% if(currentUser && review.author && review.author.equals(currentUser._id)) { %>
 
                     <button 
                       type="button" 
@@ -312,7 +328,7 @@
               </div>
             </h5>
     
-              <div class="card mb-3 <%= (currentUser && review.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
+              <div class="card mb-3 <%= (currentUser && review.author && review.author.equals(currentUser._id)) ? '' : 'text-bg-light' %>">
                 <div class="card-body">
                   <div class="d-flex align-items-center gap-1 mb-3">
                     <span class="text-muted">Rated: </span>
