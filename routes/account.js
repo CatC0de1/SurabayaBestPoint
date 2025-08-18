@@ -29,7 +29,7 @@ router.patch('/:id/email', isAuth, isAccountOwner, isValidObjectId('/account'), 
 router.patch('/:id/profil', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateProfil));
 router.patch('/:id/fullname', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateFullname));
 router.patch('/:id/description', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateDescription));
-router.patch('/:id/address', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateAddress));
+router.patch('/:id/contact', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updateContact));
 router.patch('/:id/password', isAuth, isAccountOwner, isValidObjectId('/account'), wrapAsync(AccountController.updatePassword));
 
 module.exports = router;

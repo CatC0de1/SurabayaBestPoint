@@ -36,9 +36,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="validated-form" id="editUsername" action="/account/<%= user._id %>/username?_method=PATCH" method="POST">
+            <form class="px-4 validated-form" id="editUsername" action="/account/<%= user._id %>/username?_method=PATCH" method="POST">
               <label for="username" class="mb-2">Type your new username</label>
-              <input type="text" class="form-control" name="username" id="username" placeholder="your_username" value="<%= user.username %>" required>
+              <input type="text" class="text-bg-light form-control" name="username" id="username" placeholder="your_username" value="<%= user.username %>" required>
             </form>
           </div>
           <div class="modal-footer">
@@ -63,9 +63,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="validated-form" id="editEmail" action="/account/<%= user._id %>/email?_method=PATCH" method="POST">
+            <form class="px-4 validated-form" id="editEmail" action="/account/<%= user._id %>/email?_method=PATCH" method="POST">
               <label for="email" class="mb-2">Type your new email</label>
-              <input type="email" class="form-control" name="email" id="email" placeholder="example@mail.com" value="<%= user.email %>" required>
+              <input type="email" class="text-bg-light form-control" name="email" id="email" placeholder="example@mail.com" value="<%= user.email %>" required>
             </form>
           </div>
           <div class="modal-footer">
@@ -92,11 +92,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="validated-form" id="editFullname" action="/account/<%= user._id %>/fullname?_method=PATCH" method="POST">
+            <form class="px-4 validated-form" id="editFullname" action="/account/<%= user._id %>/fullname?_method=PATCH" method="POST">
               <label for="fullname" class="mb-2">
                 <%= (!user.fullName) ? 'Add your full name' : 'Type your new full name' %>
               </label>
-              <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Your Full Name" value="<%= user.fullName %>" required>
+              <input type="text" class="text-bg-light form-control" name="fullname" id="fullname" placeholder="Your Full Name" value="<%= user.fullName %>" required>
             </form>
           </div>
           <div class="modal-footer">
@@ -123,16 +123,100 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="validated-form" id="editDescription" action="/account/<%= user._id %>/description?_method=PATCH" method="POST">
+            <form class="px-4 validated-form" id="editDescription" action="/account/<%= user._id %>/description?_method=PATCH" method="POST">
               <label for="description" class="mb-2">
                 Describe more about you
               </label>
-              <textarea type="text" class="form-control" name="description" id="description" placeholder="Your Description" rows="5" required><%= (user.description) ? user.description : '' %></textarea>
+              <textarea type="text" class="text-bg-light form-control" name="description" id="description" placeholder="Your Description" rows="5" required><%= (user.description) ? user.description : '' %></textarea>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
             <button type="submit" form="editDescription" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal contact -->
+    <div class="modal fade" id="editContactModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              <%= (!user.address || !user.instagram || !user.twitter || !user.facebook) ? 'Add Contact' : 'Update Contact' %>
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="validated-form" id="editContact" action="/account/<%= user._id %>/contact?_method=PATCH" method="POST">
+              <label class="mb-2 w-100 px-4">
+                <%= (!user.address) ? 'Add address' : 'Change address' %>
+                <input type="text" class="text-bg-light form-control" name="address" placeholder="Your Address" value="<%= user.address %>">
+              </label>
+              <label class="mb-2 w-100 px-4">
+                <%= (!user.instagram) ? 'Add Instagram' : 'Change Instagram' %>
+                <input type="text" class="form-control" name="instagram" placeholder="Your Instagram Link" value="<%= user.instagram %>">
+              </label>
+              <label class="mb-2 w-100 px-4">
+                <%= (!user.twitter) ? 'Add Twitter' : 'Change Twitter' %>
+                <input type="text" class="form-control" name="twitter" placeholder="Your Twitter Link" value="<%= user.twitter %>">
+              </label>
+              <label class="mb-2 w-100 px-4">
+                <%= (!user.facebook) ? 'Add Facebook' : 'Change Facebook' %>
+                <input type="text" class="form-control" name="facebook" placeholder="Your Facebook Link" value="<%= user.facebook %>">
+              </label>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editContact" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+              </svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal password -->
+    <div class="modal fade" id="editPasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Change Password
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="px-4 validated-form" id="editPassword" action="/account/<%= user._id %>/password?_method=PATCH" method="POST">
+              <div class="mb-3 input-group">
+                <div class="form-floating">
+                  <input type="password" class="text-bg-light form-control" name="password" id="password" placeholder="admin123" aria-describedby="passwordHelpBlock" required>
+                  <label for="password">New Password</label>
+                </div>
+                <%- include('../layouts/partials/passwordToggle') %>
+                <div id="passwordHelpBlock" class="form-text w-100">
+                  Your new password must be at least 6 characters long, contain letters and numbers.
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password" class="text-bg-light form-control" name="passwordConfirmation" id="passwordConfirmation" placeholder="type your new password again" required>
+                <label for="passwordConfirmation">Password Confirmation</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-25" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" form="editPassword" class="btn btn-success w-25 d-flex gap-2 align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
               </svg>
@@ -174,19 +258,19 @@
       <ul>
         <li>
           <span class="text-muted">Address:</span>
-          <span><%= (!user.address) ? ' - ' : user.address %></span>
+          <a href="<%= (!user.address) ? '#' : 'https://www.google.com/maps/search/'+user.address %>" class="text-decoration-none <%= (!user.address) ? 'text-muted' : '' %>" target="_blank" rel="noopener"><%= (!user.address) ? ' - ' : user.address %></a>
         </li>
         <li>
           <span class="text-muted">Instagram:</span>
-          <a href="<%= user.instagram %>" class="text-decoration-none text-primary"><%= (!user.Instagram) ? ' - ' : user.Instagram %></a>
+          <a href="<%= (!user.instagram) ? '#' : user.instagram %>" class="text-decoration-none <%= (!user.instagram) ? 'text-muted' : '' %>" target="_blank" rel="noopener"><%= (!user.instagram) ? ' - ' : user.instagram %></a>
         </li>
         <li>
-          <span class="text-muted">twitter:</span>
-          <a href="<%= user.twitter %>" class="text-decoration-none text-primary"><%= (!user.twitter) ? ' - ' : user.twitter %></a>
+          <span class="text-muted">Twitter:</span>
+          <a href="<%= (!user.twitter) ? '#' : user.twitter %>" class="text-decoration-none <%= (!user.twitter) ? 'text-muted' : '' %>" target="_blank" rel="noopener"><%= (!user.twitter) ? ' - ' : user.twitter %></a>
         </li>
         <li>
-          <span class="text-muted">facebook:</span>
-          <a href="<%= user.facebook %>" class="text-decoration-none text-primary"><%= (!user.facebook) ? ' - ' : user.facebook %></a>
+          <span class="text-muted">Facebook:</span>
+          <a href="<%= (!user.facebook) ? '#' : user.facebook %>" class="text-decoration-none <%= (!user.facebook) ? 'text-muted' : '' %>" target="_blank" rel="noopener"><%= (!user.facebook) ? ' - ' : user.facebook %></a>
         </li>
       </ul>
     </div>

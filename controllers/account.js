@@ -24,8 +24,11 @@ module.exports.updateUsername = async (req, res, next) => {
     const user = await User.findByIdAndUpdate( id, { username }, { new: true, runValidators: true });
     if (!user) next(new ExpressError('User not found!', 404));
     
-    req.flash('success_msg', 'Update username succesfully! login to see your update');
-    res.redirect('/login');
+    req.login(user, (error) => {
+      if (error) return next(error);
+      req.flash('success_msg', 'Update username succesfully!');
+      res.redirect(`/account/${id}`);
+    })
   } catch (error) {
     let msg;
 
@@ -40,7 +43,7 @@ module.exports.updateUsername = async (req, res, next) => {
       req.flash('error_msg', msg);
       return res.redirect(`/account/${id}`);
     } else {
-      return next(new ExpressError(msg, 400));
+      return next(new ExpressError('Update username failed!', 500));
     }
   }
 };
@@ -53,7 +56,7 @@ module.exports.updateEmail = async (req, res, next) => {
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email)) {
       req.flash('error_msg', 'Invalid email format!');
-      return res.redirect(`/account/${id}`); // balik ke account page
+      return res.redirect(`/account/${id}`);
     }
 
     const user = await User.findByIdAndUpdate( id, { email }, { new: true, runValidators: true });
@@ -99,7 +102,7 @@ module.exports.updateFullname = async (req, res, next) => {
     req.flash('success_msg', 'Update full name succesfully!');
     res.redirect(`/account/${id}`);
   } catch (error) {
-    return next(new ExpressError(msg, 400));
+    return next(new ExpressError('Update email failed!', 500));
   }
 }
 
@@ -114,13 +117,56 @@ module.exports.updateDescription = async (req, res, next) => {
     req.flash('success_msg', 'Update description succesfully!');
     res.redirect(`/account/${id}`);
   } catch (error) {
-    return next(new ExpressError(msg, 400));
+    return next(new ExpressError('Update description failed!', 500));
   }
 }
 
-module.exports.updateAddress = async (req, res, next) => {}
+module.exports.updateContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { address, instagram, facebook, twitter } = req.body;
+    
+    const user = await User.findByIdAndUpdate( id, { address, instagram, facebook, twitter }, { new: true, runValidators: true });
+    if (!user) next(new ExpressError('User not found!', 404));
+  
+    req.flash('success_msg', 'Update contact succesfully!');
+    res.redirect(`/account/${id}`);
+  } catch (error) {
+    return next(new ExpressError('Update contact failed!', 500));
+  }
+}
 
-module.exports.updatePassword = async (req, res, next) => {}
+module.exports.updatePassword = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { password, passwordConfirmation } = req.body;
+
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
+    if (!password || password.length < 6 || !passwordPattern.test(password)) {
+      req.flash('error_msg', '"password" at least 6 characters long and contain letters and numbers');
+      return res.redirect(`/account/${id}`);
+    }
+
+    if (password !== passwordConfirmation) {
+      req.flash('error_msg', 'Passwords do not match');
+      return res.redirect(`/account/${id}`);
+    }
+    
+    const user = await User.findById(id);
+    if (!user) next(new ExpressError('User not found!', 404));
+  
+    await user.setPassword(password);
+    await user.save();
+
+    req.login(user, (error) => {
+      if (error) return next(error);
+      req.flash('success_msg', 'Update password succesfully!');
+      res.redirect(`/account/${id}`);
+    })
+  } catch (error) {
+    return next(new ExpressError('Update password failed!', 500));
+  }
+}
 
 module.exports.destroy = async (req, res, next) => {
   const { id } = req.params;
